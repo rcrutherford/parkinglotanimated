@@ -50,14 +50,55 @@
 					space.style.height = spaceSmallestDim-5+'px';
 					space.style.width = spaceLargestDim+'px';
 					space.style.left = lotLeft+lotWidth-spaceLargestDim-bottomIgnore-3+'px';
-					console.log(lotLeft+lotWidth-spaceLargestDim-bottomIgnore-3+'px');
+					// console.log(lotLeft+lotWidth-spaceLargestDim-bottomIgnore-3+'px');
 					space.style.bottom = bottomIgnore+(spaceSmallestDim*(i-10))+'px';
+					console.dir(space);
+				}
+				for (let i=19;i<=23;i++) {
+					var space = document.createElement("div");
+					var t = document.createTextNode(i);
+					space.appendChild(t);
+					lot.appendChild(space);
+					space.className = 'space';
+					space.id = 'space'+i;
+					space.style.height = spaceLargestDim+'px';
+					space.style.width = spaceSmallestDim+'px';
+					space.style.left = lotLeft+(spaceLargestDim*2)+(spaceSmallestDim*(i-19))+bottomIgnore+'px';
+					// console.log(lotLeft+(spaceLargestDim*(i-19+2))+bottomIgnore);
+					space.style.bottom = bottomIgnore+'px';
+					console.dir(space);
+				}
+				for (let i=24;i<=28;i++) {
+					var space = document.createElement("div");
+					var t = document.createTextNode(i);
+					space.appendChild(t);
+					lot.appendChild(space);
+					space.className = 'space';
+					space.id = 'space'+i;
+					space.style.height = spaceLargestDim+'px';
+					space.style.width = spaceSmallestDim+'px';
+					space.style.left = lotLeft+(spaceLargestDim*2)+(spaceSmallestDim*(i-24))+bottomIgnore+'px';
+					 // console.log(lotLeft+(spaceLargestDim*(i-24+2))+bottomIgnore);
+					space.style.bottom = bottomIgnore+(spaceLargestDim*2)+'px';
+					console.dir(space);
+				}
+				for (let i=29;i<=33;i++) {
+					var space = document.createElement("div");
+					var t = document.createTextNode(i);
+					space.appendChild(t);
+					lot.appendChild(space);
+					space.className = 'space';
+					space.id = 'space'+i;
+					space.style.height = spaceLargestDim+'px';
+					space.style.width = spaceSmallestDim+'px';
+					space.style.left = lotLeft+(spaceLargestDim*2)+(spaceSmallestDim*(i-29))+bottomIgnore+'px';
+					 // console.log(lotLeft+(spaceLargestDim*(i-24+2))+bottomIgnore);
+					space.style.bottom = bottomIgnore+(spaceLargestDim*4)+bottomIgnore+'px';
 					console.dir(space);
 				}
 
 				var lanes = function () {
 					let space1 = document.getElementById("space1");
-					let space10 = document.getElementById("space10");
 					var lane1 = document.createElement("div");
 					var t = document.createTextNode('L1');
 					lane1.appendChild(t);
@@ -69,6 +110,7 @@
 					lane1.style.left = space1.style.right;
 					lane1.style.bottom = 0;
 					
+					let space10 = document.getElementById("space10");
 					var lane2 = document.createElement("div");
 					var t = document.createTextNode('L2');
 					lane2.appendChild(t);
@@ -77,8 +119,32 @@
 					lane2.id = 'lane2';
 					lane2.style.height = lotHeight+'px';
 					lane2.style.width = parseInt(space1.style.width)-leftIgnore+'px';
-					lane2.style.left = parseInt(space10.style.left)-spaceLargestDim+'px';
+					lane2.style.left = parseInt(space10.style.left)-spaceLargestDim+leftIgnore+'px';
 					lane2.style.bottom = 0;
+
+					let space19 = document.getElementById("space19");
+					var lane3 = document.createElement("div");
+					var t = document.createTextNode('L3');
+					lane3.appendChild(t);
+					lot.appendChild(lane3);
+					lane3.className = 'lane';
+					lane3.id = 'lane3';
+					lane3.style.height = spaceLargestDim+'px';
+					lane3.style.width =(spaceSmallestDim*5)+'px';
+					lane3.style.left = parseInt(space19.style.left)+'px';
+					lane3.style.bottom = parseInt(space19.style.bottom)+spaceLargestDim+'px';
+
+					let space24 = document.getElementById("space24");
+					var lane4 = document.createElement("div");
+					var t = document.createTextNode('L4');
+					lane4.appendChild(t);
+					lot.appendChild(lane4);
+					lane4.className = 'lane';
+					lane4.id = 'lane4';
+					lane4.style.height = spaceLargestDim+'px';
+					lane4.style.width =(spaceSmallestDim*5)+'px';
+					lane4.style.left = parseInt(space24.style.left)+'px';
+					lane4.style.bottom = parseInt(space24.style.bottom)+spaceLargestDim+leftIgnore+'px';
 				};
 				lanes();
 			}
