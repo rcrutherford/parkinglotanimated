@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+	#car {
+		position: absolute;
+	}
+	/*#container { 
+		display:flex; 
+	}*/
+	#lot {
+		background: url(images/parkinglot.jpg) no-repeat;
+  		background-size: 100%;
+	}
+	.item {
+		display:flex;
+		align-items: center;
+		justify-content: center;
+		flex:1;
+		border: solid black 2px;
+		height: 300px;
+		font-size: 6em;
+	}
+
+	#push {
+		height: 200px;
+	}
+
+	#ruler {
+		border:solid 2px black;
+		width:1100px;
+	}
+	</style>
+</head>
+<body>
+	<div id="lot">
+		<img id="car" src="images/car-red.png" />
+		<!-- <div id="push">&nbsp;</div>
+		<div id="container" >
+			<div class="item">1</div>
+			<div class="item">2</div>
+			<div class="item">3</div>
+			<div class="item">4</div>
+			<div class="item">5</div>
+			<div class="item">6</div>
+			<div class="item">7</div>
+			<div class="item">8</div>
+			<div class="item">9</div>
+			<div class="item">10</div>
+			<div class="item">11</div>
+			<div class="item">12</div>
+			<div class="item">13</div>
+			<div class="item">14</div>
+		</div> -->
+	</div>
+	<hr id="eventProxy">
+<script>
+	let Space = function(top, left) {
+		this.top = top;
+		this.left = left;
+	}
+
+	let Car = function(carImage, space) {
+		let self = this;
+		this.rotated = false;
+		this.observeTime = function(e){
+			console.dir(this);
+
+			let windowRightPos = 1100;
+			let carLeftPx = parseInt(getComputedStyle(carImage).left.replace('px',''));
+			let carTopPx = parseInt(getComputedStyle(carImage).top.replace('px',''));
+			//moves car
+			if(carLeftPx < space.left) {
+				self.moveCarRight();
+			}
+
+			//rotates car
+			if(self.left() > space.left && !self.rotated) {
+				carImage.style.transform = 'rotate(90deg)';
+				self.rotated = true;
+			}
+
+			// parks rotated car
+			if(self.rotated && self.top() < space.top) {
+				self.moveCarDown();
+			}
+		}
+
+		this.moveCarDown = function() {
+			console.log('px: ' + self.top());
+			carImage.style.top = (self.top() + 5) + 'px';
+		}
+
+		this.moveCarRight = function() {
+			console.log('px: ' + self.left());
+			carImage.style.left = (self.left() + 20) + 'px';
+		}
+
+		this.top = function() {
+			return parseInt(getComputedStyle(carImage).top.replace('px',''));
+		}
+
+		this.left = function() {
+			return parseInt(getComputedStyle(carImage).left.replace('px',''));
+		}
+	}
+
+	var eventProxy = document.getElementById("eventProxy");
+	var carImg = document.getElementById('car');
+
+	var space = new Space(300, 1070);
+	var car = new Car(carImg, space);
+
+	eventProxy.addEventListener('tick',car.observeTime);
+
+	var intervalId = setInterval(fireTick, 33.3333);
+
+	function fireTick() {
+		let event = new Event('tick');
+		eventProxy.dispatchEvent(event);
+	}
+</script>
+</body>
+</html>
