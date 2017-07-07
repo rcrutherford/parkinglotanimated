@@ -3,29 +3,92 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Document</title>
+	<script type="text/javascript">
+		window.onload = function () {
+			let lot = document.getElementById("lot");
+			let windowWidth = parseInt(getComputedStyle(lot).width.replace('px',''));
+			let lotHeight = parseInt(getComputedStyle(lot).height.replace('px',''));
+			let lotWidth = lotHeight * 1.333333333;
+			let lotLeft = (windowWidth - lotWidth )/2;
+			let bottomIgnore = lotHeight*.02117;
+			let topIgnore = lotHeight*.01466;
+			let leftIgnore = lotWidth*.010975;
+			lotHeight = lotHeight -bottomIgnore - topIgnore;
+			let spaceSmallestDim = lotHeight / 9;
+			let spaceLargestDim = spaceSmallestDim * 1.75;
+
+
+			let createSpaces = function() {
+				for (i=1;i<=9;i++) {
+					var space = document.createElement("space"+i);
+					var t = document.createTextNode(i);
+					space.appendChild(t);
+					lot.appendChild(space);
+					space.className = 'space';
+					space.style.height = spaceSmallestDim+'px';
+					space.style.width = spaceLargestDim+'px';
+					space.style.left = lotLeft+leftIgnore+'px';
+					space.style.bottom = bottomIgnore+(spaceSmallestDim*(i-1))+'px';
+					console.dir(space);
+				}
+				for (i=10;i<=18;i++) {
+					var space = document.createElement("space"+i);
+					var t = document.createTextNode(i);
+					space.appendChild(t);
+					lot.appendChild(space);
+					space.className = 'space';
+					space.style.height = spaceSmallestDim-2+'px';
+					space.style.width = spaceLargestDim+'px';
+					space.style.left = lotLeft+lotWidth-spaceLargestDim-bottomIgnore+'px';
+					space.style.width = spaceLargestDim+'px';
+					space.style.bottom = bottomIgnore+(spaceSmallestDim*(i-10))+'px';
+					console.dir(space);
+				}
+			}
+			createSpaces();
+			
+
+			console.log(windowWidth);
+			console.log(lotHeight);
+			console.log(lotWidth);
+			console.log(lotLeft);
+			console.log(bottomIgnore);
+			console.log(topIgnore);
+			console.log(spaceSmallestDim);
+			console.log(spaceLargestDim);
+		};
+	</script>	
+	<style type="text/css">
+		 body, html {
+	        height: 100%;
+	        margin: 0;
+	    }
+		.bg {
+	        /* The image used */
+	        background-image: url("images/parkinglot86.jpg");
+	        /* Full height */
+	        height: 100%; 
+	        /* Center and scale the image*/
+	        background-position: center;
+	        background-repeat: no-repeat;
+	        background-size: contain;
+	        border: solid red 2px;
+	        position: relative;
+	    }
+	    .space {
+	    	border: solid green 1px;
+	    	position: absolute;
+	    	display: flex;
+		    align-items: center;
+		    justify-content: center;
+  			
+	    }
+
+	</style>
 </head>
-<style type="text/css">
-	 body, html {
-        height: 100%;
-        margin: 0;
-    }
-	.bg {
-        /* The image used */
-        background-image: url("images/parkinglot.jpg");
-
-        /* Full height */
-        height: 100%; 
-
-        /* Center and scale the image nicely */
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: contain;
-
-    }
-</style>
 <body>
-	<div class="bg">
-		<div></div>
+	<div id="lot" class="bg">
+		
 	</div>
 </body>
 </html>
