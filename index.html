@@ -4,47 +4,87 @@
 	<meta charset="UTF-8">
 	<title>Document</title>
 	<script type="text/javascript">
+		
 		window.onload = function () {
 			let lot = document.getElementById("lot");
 			let windowWidth = parseInt(getComputedStyle(lot).width.replace('px',''));
 			let lotHeight = parseInt(getComputedStyle(lot).height.replace('px',''));
 			let lotWidth = lotHeight * 1.333333333;
+			if (windowWidth<lotWidth){
+				alert("Please make window width wider than parkinglot!")
+			}
 			let lotLeft = (windowWidth - lotWidth )/2;
 			let bottomIgnore = lotHeight*.02117;
 			let topIgnore = lotHeight*.01466;
 			let leftIgnore = lotWidth*.010975;
-			lotHeight = lotHeight -bottomIgnore - topIgnore;
-			let spaceSmallestDim = lotHeight / 9;
+			let spacesHeight =lotHeight -bottomIgnore - topIgnore;
+			let spaceSmallestDim = spacesHeight / 9;
 			let spaceLargestDim = spaceSmallestDim * 1.75;
+			let onePctWidth = lotWidth/100;
+			let onePctHeight = spacesHeight/100;
 
 
 			let createSpaces = function() {
-				for (i=1;i<=9;i++) {
-					var space = document.createElement("space"+i);
+				for (let i=1;i<=9;i++) {
+					var space = document.createElement("div");
 					var t = document.createTextNode(i);
 					space.appendChild(t);
 					lot.appendChild(space);
 					space.className = 'space';
+					space.id = 'space'+i;
 					space.style.height = spaceSmallestDim+'px';
 					space.style.width = spaceLargestDim+'px';
 					space.style.left = lotLeft+leftIgnore+'px';
 					space.style.bottom = bottomIgnore+(spaceSmallestDim*(i-1))+'px';
+					space.style.right = lotLeft+leftIgnore+spaceLargestDim+'px';
 					console.dir(space);
 				}
-				for (i=10;i<=18;i++) {
-					var space = document.createElement("space"+i);
+				
+				for (let i=10;i<=18;i++) {
+					var space = document.createElement("div");
 					var t = document.createTextNode(i);
 					space.appendChild(t);
 					lot.appendChild(space);
 					space.className = 'space';
-					space.style.height = spaceSmallestDim-2+'px';
+					space.id = 'space'+i;
+					space.style.height = spaceSmallestDim-5+'px';
 					space.style.width = spaceLargestDim+'px';
-					space.style.left = lotLeft+lotWidth-spaceLargestDim-bottomIgnore+'px';
-					space.style.width = spaceLargestDim+'px';
+					space.style.left = lotLeft+lotWidth-spaceLargestDim-bottomIgnore-3+'px';
+					console.log(lotLeft+lotWidth-spaceLargestDim-bottomIgnore-3+'px');
 					space.style.bottom = bottomIgnore+(spaceSmallestDim*(i-10))+'px';
 					console.dir(space);
 				}
+
+				var lanes = function () {
+					let space1 = document.getElementById("space1");
+					let space10 = document.getElementById("space10");
+					var lane1 = document.createElement("div");
+					var t = document.createTextNode('L1');
+					lane1.appendChild(t);
+					lot.appendChild(lane1);
+					lane1.className = 'lane';
+					lane1.id = 'lane1';
+					lane1.style.height = lotHeight+'px';
+					lane1.style.width = space1.style.width;
+					lane1.style.left = space1.style.right;
+					lane1.style.bottom = 0;
+					
+					var lane2 = document.createElement("div");
+					var t = document.createTextNode('L2');
+					lane2.appendChild(t);
+					lot.appendChild(lane2);
+					lane2.className = 'lane';
+					lane2.id = 'lane2';
+					lane2.style.height = lotHeight+'px';
+					lane2.style.width = parseInt(space1.style.width)-leftIgnore+'px';
+					lane2.style.left = parseInt(space10.style.left)-spaceLargestDim+'px';
+					lane2.style.bottom = 0;
+				};
+				lanes();
 			}
+
+
+
 			createSpaces();
 			
 
@@ -68,15 +108,24 @@
 	        background-image: url("images/parkinglot86.jpg");
 	        /* Full height */
 	        height: 100%; 
+
 	        /* Center and scale the image*/
 	        background-position: center;
 	        background-repeat: no-repeat;
 	        background-size: contain;
 	        border: solid red 2px;
-	        position: relative;
+	        /*position: relative;*/
 	    }
 	    .space {
 	    	border: solid green 1px;
+	    	position: absolute;
+	    	display: flex;
+		    align-items: center;
+		    justify-content: center;
+  			
+	    }
+	    .lane {
+	    	border: solid blue 1px;
 	    	position: absolute;
 	    	display: flex;
 		    align-items: center;
