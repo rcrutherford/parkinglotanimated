@@ -8,24 +8,38 @@
 	<script type="text/javascript" src="lane.js"></script>
 	<script type="text/javascript">
 		
+			var windowWidth = 0;
+			var lotHeight = 0;
+			var lotWidth = 0;
+			var lotLeft = 0;
+			var bottomIgnore = 0;
+			var topIgnore = 0;
+			var leftIgnore = 0;
+			var spacesHeight = 0;
+			var spaceSmallestDim = 0;
+			var spaceLargestDim = 0;
+			var onePctWidth = 0;
+			var onePctHeight = 0;
+			var carImg = {};
+
+
 		window.onload = function () {
-			let lot = document.getElementById("lot");
-			let windowWidth = parseInt(getComputedStyle(lot).width.replace('px',''));
-			let lotHeight = parseInt(getComputedStyle(lot).height.replace('px',''));
-			let lotWidth = lotHeight * 1.333333333;
+			lot = document.getElementById("lot");
+			windowWidth = parseInt(getComputedStyle(lot).width.replace('px',''));
+			lotHeight = parseInt(getComputedStyle(lot).height.replace('px',''));
+			lotWidth = lotHeight * 1.333333333;
 			if (windowWidth<lotWidth){
 				alert("Please make window width wider than parkinglot!")
 			}
-			let lotLeft = (windowWidth - lotWidth )/2;
-			let bottomIgnore = lotHeight*.02117;
-			let topIgnore = lotHeight*.01466;
-			let leftIgnore = lotWidth*.010975;
-			let spacesHeight =lotHeight -bottomIgnore - topIgnore;
-			let spaceSmallestDim = spacesHeight / 9;
-			let spaceLargestDim = spaceSmallestDim * 1.75;
-			let onePctWidth = lotWidth/100;
-			let onePctHeight = spacesHeight/100;
-
+			lotLeft = (windowWidth - lotWidth )/2;
+			bottomIgnore = lotHeight*.02117;
+			topIgnore = lotHeight*.01466;
+			leftIgnore = lotWidth*.010975;
+			spacesHeight =lotHeight -bottomIgnore - topIgnore;
+			spaceSmallestDim = spacesHeight / 9;
+			spaceLargestDim = spaceSmallestDim * 1.75;
+			onePctWidth = lotWidth/100;
+			onePctHeight = spacesHeight/100;
 
 			
 
@@ -33,14 +47,18 @@
 			createLanes();
 
 			var eventProxy = document.getElementById("eventProxy");
-			var carImg = document.getElementById('car1');
+			
+			carImg = document.getElementById('car1');
 
-			var space = new Space(300, 1070);
-			var car = new Car(carImg, space);
-
+			// let top = space5.style.top;
+			// let right = space5.style.right;
+			// var space = new Space(top, right);
+			var car = new Car(carImg, space3);
+						
 			eventProxy.addEventListener('tick',car.observeTime);
 
 			var intervalId = setInterval(fireTick, 33.3333);
+			var myTimeOut = setTimeout(function() {clearInterval(intervalId);},5000);
 
 			function fireTick() {
 				let event = new Event('tick');
@@ -84,13 +102,16 @@
 	    }
 	    .car {
 			position: absolute;
+			border: solid black 1px;
 		}
 
 	</style>
 </head>
 <body>
 	<div id="lot" class="bg">
-		<img id="car1" class = "car" src="images/car-red.png" />
+		
 	</div>
+		<img id="car1" class = "car" src="images/car-blue.png" />
+	<br id="eventProxy">
 </body>
 </html>

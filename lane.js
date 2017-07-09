@@ -11,7 +11,15 @@ let createLanes = function () {
 				lane1.style.width = space1.style.width;
 				lane1.style.left = space1.style.right;
 				lane1.style.bottom = 0;
+
+				// carImg=document.createElement("img");
+				// lane1.appendChild(carImg);
+				// carImg.src = "images/car-blue.png";
+				// carImg.className = "car";
+				// carImg.id = "car1"
 				
+
+
 				let space10 = document.getElementById("space10");
 				var lane2 = document.createElement("div");
 				var t = document.createTextNode('L2');
