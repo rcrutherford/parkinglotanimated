@@ -21,6 +21,7 @@
 			var onePctWidth = 0;
 			var onePctHeight = 0;
 			var carImg = {};
+			var car={};
 
 
 		window.onload = function () {
@@ -53,12 +54,13 @@
 			// let top = space5.style.top;
 			// let right = space5.style.right;
 			// var space = new Space(top, right);
-			var car = new Car(carImg, space3);
+			console.dir(space3);
+			car = new Car(carImg, space7);
 						
 			eventProxy.addEventListener('tick',car.observeTime);
 
 			var intervalId = setInterval(fireTick, 33.3333);
-			var myTimeOut = setTimeout(function() {clearInterval(intervalId);},5000);
+			var myTimeOut = setTimeout(function() {clearInterval(intervalId);},6000);
 
 			function fireTick() {
 				let event = new Event('tick');
