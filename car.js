@@ -11,31 +11,39 @@
 		this.reachedSpace = false;
 		this.heading='right';
 		this.currentLane = '';
+		this.path = [];
 		let self = this;
 
 
-		this.observeTime = function(e){
+		this.observeTime = function(e) {
 			// console.log('observeTime');
 			// console.dir(this);
 			let carLeftPx = parseInt(getComputedStyle(carImage).left.replace('px',''));
 			let carRightPx = parseInt(getComputedStyle(carImage).right.replace('px',''));
 			let carTopPx = parseInt(getComputedStyle(carImage).top.replace('px',''));
 			let carBottomPx = parseInt(getComputedStyle(carImage).bottom.replace('px',''));
+			let carFrontPx = 0;
 
-			console.log('space top: '+parseInt(getComputedStyle(space).top.replace('px','')));
+			//console.log('space top: '+parseInt(getComputedStyle(space).top.replace('px','')));
 			// console.log('space bottom: '+space.style.bottom.replace('px',''));
 			
+			// where is space in relation to the car?
+
 			//moves car			
-			//is space in my lane?
-			
+			//is the space in my lane?
+			if (self.path.length == 1) {
+				// all is good just go up to space
+			}
 			
 			if(self.reachedSpace == false && carTopPx > parseInt(getComputedStyle(space).top.replace('px',''))+speed) {
 				// console.log('bottom: '+carBottomPx);
 				self.moveCarUp();
 			}
-			else {
-				self.reachedSpace=true;
-				console.log('reachedSpace:'+self.reachedSpace);
+			else { 
+				if (self.reachedSpace == false) {
+					self.reachedSpace=true;
+					console.log('reachedSpace:'+self.reachedSpace);
+				}
 			}
 			
 			if (self.rotated == false && self.reachedSpace == true) {
@@ -60,8 +68,25 @@
 						break;
 				}
 				self.rotated=true;
+				carFrontPx = function () {
+					switch (self.heading) {
+						case 'up':
+							carTopPx;
+							break;
+						case 'down':
+							carBottomPx;
+							break;
+						case 'right':
+							carRightPx;
+							break;
+						case 'left':
+							carleftpx;	
+							break;
+					} 
+				}
 			}
 			// park it
+			let enterDirection = space.enterDirection;
 			if (self.rotated == true && carLeftPx > parseInt(getComputedStyle(space).left.replace('px',''))+speed) {
 				switch (self.heading) {
 					case 'up':
@@ -232,7 +257,7 @@
 			},
 			{'start':'lane2',
 			 'space':'lane1',
-			 'path':'up,right@lane3,up|down@lane1'
+			 'path':'up,left@lane3,up|down@lane1'
 			},
 			{'start':'lane2',
 			 'space':'lane3',
@@ -245,9 +270,10 @@
 		];
 		
 		for (i in paths) {
-			if (paths[i].start.value == self.currentLane && paths[i].space.value == space.lane) {
-				console.log (paths[i].path.value);
-				path = paths[i].path.value;
+			// console.log ('i: '+paths[i].start);
+			if (paths[i].start == self.currentLane && paths[i].space == space.lane) {
+				console.log ('path: '+paths[i].path);
+				self.path = paths[i].path.split(',');
 				break;
 			}
 		}

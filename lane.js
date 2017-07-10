@@ -12,12 +12,13 @@ let createLanes = function () {
 				lane1.style.left = space1.style.right;
 				lane1.style.bottom = 0;
 
+
 				// carImg=document.createElement("img");
 				// lane1.appendChild(carImg);
 				// carImg.src = "images/car-blue.png";
 				// carImg.className = "car";
 				// carImg.id = "car1"
-				
+
 
 
 				let space10 = document.getElementById("space10");
@@ -45,6 +46,7 @@ let createLanes = function () {
 				lane3.style.width =(spaceSmallestDim*5)+'px';
 				lane3.style.left = parseInt(space19.style.left)+'px';
 				lane3.style.bottom = parseInt(space19.style.bottom)+spaceLargestDim+'px';
+				//console.log(getComputedStyle(lane3).top);
 
 				let space24 = document.getElementById("space24");
 				var lane4 = document.createElement("div");
@@ -58,4 +60,52 @@ let createLanes = function () {
 				lane4.style.width =(spaceSmallestDim*5)+'px';
 				lane4.style.left = parseInt(space24.style.left)+'px';
 				lane4.style.bottom = parseInt(space24.style.bottom)+spaceLargestDim+leftIgnore+'px';
+
+				var intersectionA = document.createElement("div");
+				var t = document.createTextNode('iA');
+				intersectionA.appendChild(t);
+				lot.appendChild(intersectionA);
+				intersectionA.className = 'insertsection';
+				intersectionA.id = 'A';
+				intersectionA.occupied = false;
+				intersectionA.style.height = spaceLargestDim+'px';
+				intersectionA.style.width = spaceLargestDim+'px';
+				intersectionA.style.bottom = lane3.style.bottom;
+				intersectionA.style.left =	getComputedStyle(lane3).left.replace('px','')-spaceLargestDim+'px';
+
+				var intersectionB = document.createElement("div");
+				var t = document.createTextNode('iB');
+				intersectionB.appendChild(t);
+				lot.appendChild(intersectionB);
+				intersectionB.className = 'insertsection';
+				intersectionB.id = 'B';
+				intersectionB.occupied = false;
+				intersectionB.style.height = spaceLargestDim+'px';
+				intersectionB.style.width = spaceLargestDim+'px';
+				intersectionB.style.bottom = lane3.style.bottom;
+				intersectionB.style.right =	getComputedStyle(lane2).right;
+
+				var intersectionC = document.createElement("div");
+				var t = document.createTextNode('iC');
+				intersectionC.appendChild(t);
+				lot.appendChild(intersectionC);
+				intersectionC.className = 'insertsection';
+				intersectionC.id = 'C';
+				intersectionC.occupied = false;
+				intersectionC.style.height = spaceLargestDim+'px';
+				intersectionC.style.width = spaceLargestDim+'px';
+				intersectionC.style.bottom = lane4.style.bottom;
+				intersectionC.style.left =	getComputedStyle(lane4).left.replace('px','')-spaceLargestDim+'px';
+
+				var intersectionD = document.createElement("div");
+				var t = document.createTextNode('iD');
+				intersectionD.appendChild(t);
+				lot.appendChild(intersectionD);
+				intersectionD.className = 'insertsection';
+				intersectionD.id = 'D';
+				intersectionD.occupied = false;
+				intersectionD.style.height = spaceLargestDim+'px';
+				intersectionD.style.width = spaceLargestDim+'px';
+				intersectionD.style.bottom = lane4.style.bottom;
+				intersectionD.style.right =	getComputedStyle(lane2).right;
 			};
