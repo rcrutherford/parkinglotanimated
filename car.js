@@ -5,47 +5,65 @@
 	}
 
 	let Car = function(carImage, space) {
-		// let speed = getRandom(5,20);
-		let speed = 5;
+		let speed = getRandom(5,10);
+		//let speed = 5;
 		this.rotated = false;
 		this.reachedSpace = false;
 		this.heading='right';
+		this.currentLane = '';
 		let self = this;
 
 
 		this.observeTime = function(e){
 			// console.log('observeTime');
 			// console.dir(this);
-
 			let carLeftPx = parseInt(getComputedStyle(carImage).left.replace('px',''));
-			console.log('carLeftPx:'+carLeftPx);
+			let carRightPx = parseInt(getComputedStyle(carImage).right.replace('px',''));
+			let carTopPx = parseInt(getComputedStyle(carImage).top.replace('px',''));
 			let carBottomPx = parseInt(getComputedStyle(carImage).bottom.replace('px',''));
-			console.log('carBottomPx:'+carBottomPx);
-			
-			//moves car
-			
 
-			if(self.reachedSpace==false && carBottomPx < space.style.bottom.replace('px','')) {
+			console.log('space top: '+parseInt(getComputedStyle(space).top.replace('px','')));
+			// console.log('space bottom: '+space.style.bottom.replace('px',''));
+			
+			//moves car			
+			//is space in my lane?
+			if (self.currentLane == space.lane) {
+				console.log('lane: '+self.currentLane);
+			}
+			if(self.reachedSpace == false && carTopPx > parseInt(getComputedStyle(space).top.replace('px',''))+speed) {
 				// console.log('bottom: '+carBottomPx);
 				self.moveCarUp();
 			}
 			else {
 				self.reachedSpace=true;
-				console.log('reachedSpace='+self.reachedSpace);
+				console.log('reachedSpace:'+self.reachedSpace);
 			}
 			
-			if (self.rotated == false && self.reachedSpace ==true) {
+			if (self.rotated == false && self.reachedSpace == true) {
 				switch (true) {
-					case (space.opening=='right' && self.heading=='up'):
+					case (space.enterDirection == 'left' && self.heading =='up'):
 						self.rotateLeft();
 						break;
-					case (space.opening=='left' && self.heading=='up'):
+					case (space.enterDirection == 'right' && self.heading == 'up'):
+						self.rotateRight();
+						break;
+					case (space.enterDirection == 'up' && self.heading =='right'):
+						self.rotateLeft();
+						break;
+					case (space.enterDirection == 'up' && self.heading == 'left'):
+						self.rotateRight();
+						break;
+					case (space.enterDirection == 'down' && self.heading =='left'):
+						self.rotateLeft();
+						break;
+					case (space.enterDirection == 'down' && self.heading == 'right'):
 						self.rotateRight();
 						break;
 				}
 				self.rotated=true;
 			}
-			if (self.rotated == true && carLeftPx > space.style.left.replace('px','')) {
+			// park it
+			if (self.rotated == true && carLeftPx > parseInt(getComputedStyle(space).left.replace('px',''))+speed) {
 				switch (self.heading) {
 					case 'up':
 						self.moveCarUp();
@@ -61,23 +79,8 @@
 						break;
 				}
 			}
-
-			// self.rotateLeft();
-			
 		}
-
-			// //rotates car
-			// if(self.left() > space.left && !self.rotated) {
-			// 	carImage.style.transform = 'rotate(90deg)';
-			// 	self.rotated = true;
-			// }
-
-			// // parks rotated car
-			// if(self.rotated && self.top() < space.top) {
-			// 	self.moveCarDown();
-			// }
-		
-
+			
 		this.newDirection = function (heading,RorL)  {
 			let newD = '';
 			if (RorL == 'R') {
@@ -177,26 +180,7 @@
 			carImage.style.left = (self.left() - speed) + 'px';
 		}
 
-		// this.backCarDown = function() {
-		// 	console.log('px: ' + self.bottom());
-		// 	carImage.style.bottom = (self.bottom() + speed ) + 'px';
-		// }
-
-		// this.backCarUp = function() {
-		// 	console.log('px: ' + self.bottom());
-		// 	carImage.style.bottom = (self.bottom() - speed) + 'px';
-		// }
-
-		// this.backCarRight = function() {
-		// 	console.log('px: ' + self.left());
-		// 	carImage.style.left = (self.left() - speed) + 'px';
-		// }
-
-		// this.backCarLeft = function() {
-		// 	console.log('px: ' + self.left());
-		// 	carImage.style.left = (self.left() + speed) + 'px';
-		// }
-
+		
 		this.top = function() {
 			return parseInt(getComputedStyle(carImage).top.replace('px',''));
 		}
@@ -216,11 +200,15 @@
 		carImage.style.height = spaceSmallestDim-10+'px';
 		carImage.style.width = spaceLargestDim-10+'px';
 
-
 		this.rotateLeft();
+
 		carImage.style.bottom = parseInt(carImage.style.height)*-1+'px';
-		carImage.style.left = lane1.style.left;
-		console.log('heading: '+self.heading);
+		let lane = getRandom(1,2);
+		let myLane = 'lane'+lane;
+		this.currentLane = myLane;
+		console.log(myLane);
+		carImage.style.left = eval(myLane+'.style.left');
+		console.log('carImage.style.left: '+carImage.style.left);
 
 	}
 
