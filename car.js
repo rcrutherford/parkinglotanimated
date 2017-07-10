@@ -27,9 +27,8 @@
 			
 			//moves car			
 			//is space in my lane?
-			if (self.currentLane == space.lane) {
-				console.log('lane: '+self.currentLane);
-			}
+			
+			
 			if(self.reachedSpace == false && carTopPx > parseInt(getComputedStyle(space).top.replace('px',''))+speed) {
 				// console.log('bottom: '+carBottomPx);
 				self.moveCarUp();
@@ -161,22 +160,22 @@
 		}
 
 		this.moveCarDown = function() {
-			console.log('down: ' + self.bottom());
+			// console.log('down: ' + self.bottom());
 			carImage.style.bottom = (self.bottom() -speed ) + 'px';
 		}
 
 		this.moveCarUp = function() {
-			console.log('up: ' + self.bottom());
+			// console.log('up: ' + self.bottom());
 			carImage.style.bottom = (self.bottom() + speed) + 'px';
 		}
 
 		this.moveCarRight = function() {
-			console.log('right: ' + self.left());
+			// console.log('right: ' + self.left());
 			carImage.style.left = (self.left() + speed) + 'px';
 		}
 
 		this.moveCarLeft = function() {
-			console.log('left: ' + self.left());
+			// console.log('left: ' + self.left());
 			carImage.style.left = (self.left() - speed) + 'px';
 		}
 
@@ -206,10 +205,53 @@
 		let lane = getRandom(1,2);
 		let myLane = 'lane'+lane;
 		this.currentLane = myLane;
-		console.log(myLane);
+		console.log('carLane: '+myLane+' spaceLane: '+space.lane);
 		carImage.style.left = eval(myLane+'.style.left');
-		console.log('carImage.style.left: '+carImage.style.left);
 
-	}
+		let path = '';
+		let paths = [
+			{'start':'lane1',
+			 'space':'lane1',
+			 'path':'up'
+			},
+			{'start':'lane1',
+			 'space':'lane2',
+			 'path':'up,right@lane3,up|down@lane2'
+			},
+			{'start':'lane1',
+			 'space':'lane3',
+			 'path':'up,right@lane3'
+			},
+			{'start':'lane1',
+			 'space':'lane4',
+			 'path':'up,right@lane4'
+			},
+			{'start':'lane2',
+			 'space':'lane2',
+			 'path':'up'
+			},
+			{'start':'lane2',
+			 'space':'lane1',
+			 'path':'up,right@lane3,up|down@lane1'
+			},
+			{'start':'lane2',
+			 'space':'lane3',
+			 'path':'up,left@lane3'
+			},
+			{'start':'lane2',
+			 'space':'lane4',
+			 'path':'up,left@lane4'
+			}
+		];
+		
+		for (i in paths) {
+			if (paths[i].start.value == self.currentLane && paths[i].space.value == space.lane) {
+				console.log (paths[i].path.value);
+				path = paths[i].path.value;
+				break;
+			}
+		}
+
+	} // end of Car
 
 	

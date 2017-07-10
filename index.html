@@ -8,20 +8,20 @@
 	<script type="text/javascript" src="lane.js"></script>
 	<script type="text/javascript">
 		
-			var windowWidth = 0;
-			var lotHeight = 0;
-			var lotWidth = 0;
-			var lotLeft = 0;
-			var bottomIgnore = 0;
-			var topIgnore = 0;
-			var leftIgnore = 0;
-			var spacesHeight = 0;
-			var spaceSmallestDim = 0;
-			var spaceLargestDim = 0;
-			var onePctWidth = 0;
-			var onePctHeight = 0;
-			var carImg = {};
-			var car={};
+		var windowWidth = 0;
+		var lotHeight = 0;
+		var lotWidth = 0;
+		var lotLeft = 0;
+		var bottomIgnore = 0;
+		var topIgnore = 0;
+		var leftIgnore = 0;
+		var spacesHeight = 0;
+		var spaceSmallestDim = 0;
+		var spaceLargestDim = 0;
+		var onePctWidth = 0;
+		var onePctHeight = 0;
+		var carImg = {};
+		var car={};
 
 
 		window.onload = function () {
@@ -55,7 +55,7 @@
 			// let right = space5.style.right;
 			// var space = new Space(top, right);
 			// console.dir(space3);
-			car = new Car(carImg, space5);
+			car = new Car(carImg, space3);
 						
 			eventProxy.addEventListener('tick',car.observeTime);
 
