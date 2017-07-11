@@ -3,9 +3,9 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Document</title>
-	<script type="text/javascript" src="car.js"></script>
 	<script type="text/javascript" src="space.js"></script>
 	<script type="text/javascript" src="lane.js"></script>
+	<script type="text/javascript" src="car.js"></script>
 	<script type="text/javascript">
 		
 		var windowWidth = 0;
@@ -42,20 +42,18 @@
 			onePctWidth = lotWidth/100;
 			onePctHeight = spacesHeight/100;
 
-			
-
 			createSpaces();
 			createLanes();
 
 			var eventProxy = document.getElementById("eventProxy");
 			
 			carImg = document.getElementById('car1');
+			intersectionA = document.getElementById('intersectionA');
+			intersectionB = document.getElementById('intersectionB');
+			intersectionC = document.getElementById('intersectionC');
+			intersectionD = document.getElementById('intersectionD');
 
-			// let top = space5.style.top;
-			// let right = space5.style.right;
-			// var space = new Space(top, right);
-			// console.dir(space3);
-			car = new Car(carImg, space3);
+			car = new Car(carImg, space5, intersectionA, intersectionB, intersectionC, intersectionD);
 						
 			eventProxy.addEventListener('tick',car.observeTime);
 
@@ -106,7 +104,7 @@
 			position: absolute;
 			border: solid black 1px;
 		}
-		 .insertsection {
+		 .intersection {
 	    	border: solid red 1px;
 	    	position: absolute;
 	    	display: flex;
