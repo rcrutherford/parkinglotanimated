@@ -53,12 +53,12 @@
 			intersectionC = document.getElementById('intersectionC');
 			intersectionD = document.getElementById('intersectionD');
 
-			car = new Car(carImg, space21, intersectionA, intersectionB, intersectionC, intersectionD);
+			car = new Car(carImg, space17, intersectionA, intersectionB, intersectionC, intersectionD);
 						
 			eventProxy.addEventListener('tick',car.observeTime);
 
 			var intervalId = setInterval(fireTick, 33.3333);
-			var myTimeOut = setTimeout(function() {clearInterval(intervalId);},8000);
+			var myTimeOut = setTimeout(function() {clearInterval(intervalId);},10000);
 
 			function fireTick() {
 				let event = new Event('tick');
@@ -102,6 +102,8 @@
 	    }
 	    .car {
 			position: absolute;
+			padding-top: 25px;
+			padding-bottom: 25px;
 			border: solid black 1px;
 		}
 		 .intersection {

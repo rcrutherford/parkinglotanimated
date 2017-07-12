@@ -12,10 +12,7 @@
 		this.finishedStep = false;
 		this.heading='right';
 		this.currentLane = '';
-		// this.right = 0;
-		// this.left = 0;
-		// this.top = 0;
-		// this.bottom = 0;
+		
 		let self = this;
 		let objectStyleCheck = 'top';
 		let myDirection='';
@@ -72,13 +69,16 @@
 				
 				myHeadForPx = eval(foostr);
 				
-				if (myHeadFor.substring(0,1)=='i' 
-					&& (objectStyleCheck =='top' || objectStyleCheck =='bottom')) {
-					myHeadForPx = parseInt(myHeadForPx)+(spaceSmallestDim/2);	
+				if (myHeadFor=='space' ) {
+					myHeadForPx = parseInt(myHeadForPx)-(spaceSmallestDim/4);	
 				}
+				// else if (objectStyleCheck =='right' || objectStyleCheck =='left') {
+				// 	myHeadForPx = parseInt(myHeadForPx)+(this.width/4);	
+				// }
 				else {
 					myHeadForPx = parseInt(myHeadForPx)+speed;	
 				}
+				// myHeadForPx = parseInt(myHeadForPx)+speed;
 
 				console.log('myHeadFor: '+myHeadFor+' '+objectStyleCheck+' myHeadForPx: '+myHeadForPx);
 				checkPath = false;
@@ -130,7 +130,6 @@
 
 			// park it
 			//let enterDirection = space.enterDirection;
-			
 			if  (  self.rotated == true 
 				&& self.reachedSpace == true
 				&& carFrontPx() > eval(`getComputedStyle(space).${objectStyleCheck}.replace('px','')`)
