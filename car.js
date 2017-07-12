@@ -41,207 +41,142 @@
 			}
 
 			//follow path to space		
-			console.log('carFrontPx: '+carFrontPx());
-			//console.log('iB:'+getComputedStyle(iB).top);
-			 
-			let myDirection = myPath[0];
-			let myHeadFor = myPath[1];
-		 	let foostr = `getComputedStyle(${myHeadFor}).${objectStyleCheck}.replace('px','')`;
-		 	// console.log('foostr: '+foostr);
-			let myHeadForPx = eval(foostr);
-			if (myHeadFor.substring(0,1)=='i') {
-				myHeadForPx = parseInt(myHeadForPx)+(spaceSmallestDim/2);	
-			}
-			else {
-				myHeadForPx = parseInt(myHeadForPx)+speed;	
-			}
-			
-			// console.log('myHeadForPx: '+ myHeadForPx);
-			// console.log('myHeadForPx+(spaceSmallestDim/2): '+ (myHeadForPx+(spaceSmallestDim/2)));
+			let myHeadForPx = 0;
+			let myDirection = '';
+			if (myPath.length > 0 ) {
+				console.log('myPath.length: '+myPath.length);
+				myDirection = myPath[0];
+				if (myDirection == 'up|down') {
+					if (carTopPx > space.style.top) {
+						myDirection='up';
+					}
+					else {
+						myDirection='down';
+					}
+				}
+				console.log('path direction: '+myDirection);
+				if (self.heading != myDirection) { 
+					self.rotateCar(myDirection);
+				}
+				let myHeadFor = myPath[1];
+			 	let foostr = `getComputedStyle(${myHeadFor}).${objectStyleCheck}.replace('px','')`;
+			 	console.log('foostr: '+foostr);
+				myHeadForPx = eval(foostr);
+				console.log('myHeadFor, myHeadForPx: '+myHeadFor+','+myHeadForPx);
+				if (myHeadFor.substring(0,1)=='i') {
+					myHeadForPx = parseInt(myHeadForPx)+(spaceSmallestDim/2);	
+				}
+				else {
+					myHeadForPx = parseInt(myHeadForPx)+speed;	
+				}
+			}	
 
-
-			if (   self.finishedStep == false 
+			if 	(  self.finishedStep == false 
 				&& myPath.length > 0
 				&& carFrontPx() > myHeadForPx
-			) {
-				switch (myDirection) {
+				) {
+				switch (self.heading) {
 					case 'up':
-						objectStyleCheck = 'top';
-						self.moveCarUp();
+						self.moveCarUp(speed);
 						break;
 					case 'down':
-						objectStyleCheck = 'bottom';
-						self.moveCarDown();
+						self.moveCarDown(speed);
 						break;
 					case 'left':
-						objectStyleCheck = 'left';
-						self.moveCarLeft();
+						self.moveCarLeft(speed);
 						break;
 					case 'right':
-						objectStyleCheck = 'right';
-						self.moveCarRight();
+						self.moveCarRight(speed);
 						break;
 				}
 
 			}
 			else { 
 				if (self.finishedStep == false ) {
-					self.finishedStep == true;
 					if (myPath.length > 0) {
-						myPath.pop();
-						myPath.pop();
+						myPath.shift();
+						myPath.shift();
+						console.log(myPath);
 					}
 					if (myPath.length == 0) {
 						self.reachedSpace=true;
-					}
-					else {
-						self.finishedStep = false;
+						self.finishedStep = true;
 					}
 
 				}
 			}
 			
 			if (self.rotated == false && self.reachedSpace == true) {
-				switch (true) {
-					case (space.enterDirection == 'left' && self.heading =='up'):
-						self.rotateLeft();
-						break;
-					case (space.enterDirection == 'right' && self.heading == 'up'):
-						self.rotateRight();
-						break;
-					case (space.enterDirection == 'up' && self.heading =='right'):
-						self.rotateLeft();
-						break;
-					case (space.enterDirection == 'up' && self.heading == 'left'):
-						self.rotateRight();
-						break;
-					case (space.enterDirection == 'down' && self.heading =='left'):
-						self.rotateLeft();
-						break;
-					case (space.enterDirection == 'down' && self.heading == 'right'):
-						self.rotateRight();
-						break;
-				}
+				console.log('rotate into space: '+space.enterDirection);
+				self.rotateCar(space.enterDirection)
 				self.rotated=true;
-				
 			}
+
 			// park it
 			let enterDirection = space.enterDirection;
-			if (self.rotated == true && carLeftPx > parseInt(getComputedStyle(space).left.replace('px',''))+speed) {
+			if (self.rotated == true 
+				&& self.reachedSpace == true
+				&& carFrontPx() > eval(`space.style.${enterDirection}.replace('px','')`)
+			) {
+				console.log('parking: '+carFrontPx());
 				switch (self.heading) {
 					case 'up':
-						self.moveCarUp();
+						self.moveCarUp(1);
 						break;
 					case 'down':
-						self.moveCarDown();
+						self.moveCarDown(1);
 						break;
 					case 'right':
-						self.moveCarRight();
+						self.moveCarRight(1);
 						break;
 					case 'left':
-						self.moveCarLeft();
+						self.moveCarLeft(1);
 						break;
 				}
 			}
 		} //end observertime
 			
-		this.newDirection = function (heading,RorL)  {
-			let newD = '';
-			if (RorL == 'R') {
-				switch (heading) {
-					case 'up':
-						newD  = 'right';
-						break;
-					case 'down':
-						newD  = 'left';
-						break;
-					case 'right':
-						newD  = 'down';
-						break;
-					case 'left':
-						newD  = 'up';
-						break;
-				}
-			}
-			if (RorL == 'L') {
-				switch (heading) {
-					case 'up':
-						newD  = 'left';
-						break;
-					case 'down':
-						newD  = 'right';
-						break;
-					case 'right':
-						newD  = 'up';
-						break;
-					case 'left':
-						newD  = 'down';
-						break;
-				}
-			}
-			return newD;
-		}
-
-		this.rotateRight = function () {
-			console.log('rotateRight from '+self.heading);
-			
-			switch (self.heading) {
+		this.rotateCar = function (direction) {
+			switch (direction) {
 				case 'up':
-					carImage.style.transform = 'rotate(90deg)';
-					break;
-				case 'right':
-					carImage.style.transform = 'rotate(180deg)';
-					break;
-				case 'down':
-					carImage.style.transform = 'rotate(270deg)';
-					break;
-				case 'left':
-					carImage.style.transform = 'rotate(0deg)';
-					break;
-			}
-			self.heading = self.newDirection(self.heading,'R')
-			console.log('new heading: '+self.heading);
-		}
-
-		this.rotateLeft = function () {
-			console.log('rotateLeft from '+self.heading);
-			
-			switch (self.heading) {
-				case 'up':
-					carImage.style.transform = 'rotate(-180deg)';
-					break;
-				case 'right':
 					carImage.style.transform = 'rotate(-90deg)';
+					objectStyleCheck = 'top';
+					break;
+				case 'right':
+					carImage.style.transform = 'rotate(0deg)';
+					objectStyleCheck = 'right';
 					break;
 				case 'down':
-					carImage.style.transform = 'rotate(0deg)';
+					carImage.style.transform = 'rotate(-270deg)';
+					objectStyleCheck = 'bottom';
 					break;
 				case 'left':
-					carImage.style.transform = 'rotate(-270deg)';
+					carImage.style.transform = 'rotate(-180deg)';
+					objectStyleCheck = 'left';
 					break;
 			}
-			self.heading = self.newDirection(self.heading,'L')
+			self.heading = direction;
 			console.log('new heading: '+self.heading);
 		}
 
-		this.moveCarDown = function() {
+		this.moveCarDown = function(mySpeed) {
 			// console.log('down: ' + self.bottom());
-			carImage.style.bottom = (self.bottom() -speed ) + 'px';
+			carImage.style.bottom = (self.bottom() -mySpeed ) + 'px';
 		}
 
-		this.moveCarUp = function() {
+		this.moveCarUp = function(mySpeed) {
 			// console.log('up: ' + self.bottom());
 			// carImage.style.bottom = (self.bottom() + speed) + 'px';
 			carImage.style.top = (self.top() - speed) + 'px';
 		}
 
-		this.moveCarRight = function() {
+		this.moveCarRight = function(mySpeed) {
 			// console.log('right: ' + self.left());
 			// carImage.style.left = (self.left() + speed) + 'px';
 			carImage.style.right = (self.right() - speed) + 'px';
 		}
 
-		this.moveCarLeft = function() {
+		this.moveCarLeft = function(mySpeed) {
 			// console.log('left: ' + self.left());
 			carImage.style.left = (self.left() - speed) + 'px';
 		}
@@ -312,12 +247,13 @@
 		carImage.style.height = spaceSmallestDim-10+'px';
 		carImage.style.width = spaceLargestDim-10+'px';
 
-		this.rotateLeft();
+		this.rotateCar('up');
 
 		//carImage.style.bottom = parseInt(carImage.style.height)*-1+'px';
 		carImage.style.bottom = this.bottom*-1+'px';
 		let lane = getRandom(1,2);
-		let myLane = 'lane'+lane;
+		//let myLane = 'lane'+lane;
+			let myLane = 'lane2'
 		this.currentLane = myLane;
 		console.log('carLane: '+myLane+' spaceLane: '+space.lane);
 		carImage.style.left = eval(myLane+'.style.left');
