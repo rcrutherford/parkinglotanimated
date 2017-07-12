@@ -12,13 +12,20 @@
 		this.finishedStep = false;
 		this.heading='right';
 		this.currentLane = '';
+		// this.right = 0;
+		// this.left = 0;
+		// this.top = 0;
+		// this.bottom = 0;
 		let self = this;
 		let objectStyleCheck = 'top';
-				
+		let myDirection='';
+		let myHeadForPx = 0;
+		let checkPath=true;		
 
 		this.observeTime = function(e) {
 			// console.log('observeTime');
 			// console.dir(this);
+			
 			let carLeftPx = function() {return parseInt(getComputedStyle(carImage).left.replace('px',''));}
 			let carRightPx = function() {return parseInt(getComputedStyle(carImage).right.replace('px',''));}
 			let carTopPx = function() {return parseInt(getComputedStyle(carImage).top.replace('px',''));}
@@ -40,41 +47,48 @@
 				} 
 			}
 
+			console.log('carFrontPx(): ' + carFrontPx());
 			//follow path to space		
-			let myHeadForPx = 0;
-			let myDirection = '';
-			if (myPath.length > 0 ) {
+			if (myPath.length > 0 && checkPath==true) {
 				console.log('myPath.length: '+myPath.length);
 				myDirection = myPath[0];
-				if (myDirection == 'up|down') {
-					if (carTopPx > space.style.top) {
+				if (myDirection == 'up|down' ) {
+					//console.log('up|down cartop:'+carTopPx() +' space.top:'+ getComputedStyle(space).top.replace('px',''));
+					if (carTopPx() > getComputedStyle(space).top.replace('px','')) {
 						myDirection='up';
 					}
 					else {
 						myDirection='down';
 					}
 				}
+				
 				console.log('path direction: '+myDirection);
-				if (self.heading != myDirection) { 
+				if (self.heading !== myDirection) { 
 					self.rotateCar(myDirection);
 				}
 				let myHeadFor = myPath[1];
+			 	
 			 	let foostr = `getComputedStyle(${myHeadFor}).${objectStyleCheck}.replace('px','')`;
-			 	console.log('foostr: '+foostr);
+				
 				myHeadForPx = eval(foostr);
-				console.log('myHeadFor, myHeadForPx: '+myHeadFor+','+myHeadForPx);
-				if (myHeadFor.substring(0,1)=='i') {
+				
+				if (myHeadFor.substring(0,1)=='i' 
+					&& (objectStyleCheck =='top' || objectStyleCheck =='bottom')) {
 					myHeadForPx = parseInt(myHeadForPx)+(spaceSmallestDim/2);	
 				}
 				else {
 					myHeadForPx = parseInt(myHeadForPx)+speed;	
 				}
+
+				console.log('myHeadFor: '+myHeadFor+' '+objectStyleCheck+' myHeadForPx: '+myHeadForPx);
+				checkPath = false;
 			}	
 
-			if 	(  self.finishedStep == false 
-				&& myPath.length > 0
+			if 	(  myPath.length > 0
 				&& carFrontPx() > myHeadForPx
+				&& checkPath==false
 				) {
+				
 				switch (self.heading) {
 					case 'up':
 						self.moveCarUp(speed);
@@ -89,48 +103,52 @@
 						self.moveCarRight(speed);
 						break;
 				}
+				//console.log('moved car '+self.heading+' to '+carFrontPx());
 
 			}
 			else { 
-				if (self.finishedStep == false ) {
+				if (myPath.length > 0
+					&& checkPath==false) {
+					//console.log('car '+carFrontPx()+' reached '+myHeadFor+' @'+myHeadForPx);
 					if (myPath.length > 0) {
 						myPath.shift();
 						myPath.shift();
 						console.log(myPath);
+						checkPath = true;
 					}
 					if (myPath.length == 0) {
 						self.reachedSpace=true;
-						self.finishedStep = true;
 					}
-
 				}
 			}
 			
 			if (self.rotated == false && self.reachedSpace == true) {
-				console.log('rotate into space: '+space.enterDirection);
+				//console.log('rotate into space: '+space.enterDirection);
 				self.rotateCar(space.enterDirection)
 				self.rotated=true;
 			}
 
 			// park it
-			let enterDirection = space.enterDirection;
-			if (self.rotated == true 
+			//let enterDirection = space.enterDirection;
+			
+			if  (  self.rotated == true 
 				&& self.reachedSpace == true
-				&& carFrontPx() > eval(`space.style.${enterDirection}.replace('px','')`)
-			) {
-				console.log('parking: '+carFrontPx());
+				&& carFrontPx() > eval(`getComputedStyle(space).${objectStyleCheck}.replace('px','')`)
+				) {
+				//console.log('parking: '+carFrontPx());
+				console.log('parking goal: '+objectStyleCheck+': '+eval(`getComputedStyle(space).${objectStyleCheck}.replace('px','')`));
 				switch (self.heading) {
 					case 'up':
-						self.moveCarUp(1);
+						self.moveCarUp(2);
 						break;
 					case 'down':
-						self.moveCarDown(1);
+						self.moveCarDown(2);
 						break;
 					case 'right':
-						self.moveCarRight(1);
+						self.moveCarRight(2);
 						break;
 					case 'left':
-						self.moveCarLeft(1);
+						self.moveCarLeft(2);
 						break;
 				}
 			}
@@ -159,29 +177,25 @@
 			console.log('new heading: '+self.heading);
 		}
 
+		//move car up down left right
 		this.moveCarDown = function(mySpeed) {
-			// console.log('down: ' + self.bottom());
-			carImage.style.bottom = (self.bottom() -mySpeed ) + 'px';
+			carImage.style.top = (self.top() + mySpeed ) + 'px';
 		}
 
 		this.moveCarUp = function(mySpeed) {
-			// console.log('up: ' + self.bottom());
-			// carImage.style.bottom = (self.bottom() + speed) + 'px';
-			carImage.style.top = (self.top() - speed) + 'px';
+			carImage.style.top = (self.top() - mySpeed) + 'px';
 		}
 
 		this.moveCarRight = function(mySpeed) {
-			// console.log('right: ' + self.left());
-			// carImage.style.left = (self.left() + speed) + 'px';
-			carImage.style.right = (self.right() - speed) + 'px';
+			//console.log('carImage.style.right: '+carImage.style.right);
+			carImage.style.left = (self.left() + mySpeed) + 'px';
 		}
 
 		this.moveCarLeft = function(mySpeed) {
-			// console.log('left: ' + self.left());
-			carImage.style.left = (self.left() - speed) + 'px';
+			carImage.style.left = (self.left() - mySpeed) + 'px';
 		}
 
-		
+		//return the current computed top bottom left right of car as integer
 		this.top = function() {
 			return parseInt(getComputedStyle(carImage).top.replace('px',''));
 		}
@@ -198,6 +212,7 @@
 			return parseInt(getComputedStyle(carImage).right.replace('px',''));
 		}
 
+		//paths to get from my lane to space
 		this.path = function () {
 			let paths = [
 				{'start':'lane1',
@@ -252,16 +267,20 @@
 		//carImage.style.bottom = parseInt(carImage.style.height)*-1+'px';
 		carImage.style.bottom = this.bottom*-1+'px';
 		let lane = getRandom(1,2);
-		//let myLane = 'lane'+lane;
-			let myLane = 'lane2'
+		let myLane = 'lane'+lane;
 		this.currentLane = myLane;
 		console.log('carLane: '+myLane+' spaceLane: '+space.lane);
+
 		carImage.style.left = eval(myLane+'.style.left');
 
 		console.log('space bottom: '+parseInt(getComputedStyle(space).bottom.replace('px','')));
 		console.log('space left: '+space.style.left.replace('px',''));
 		console.log('car bottom: '+this.bottom());
 		console.log('car left: '+this.left());
+		console.log('car right: '+this.right());
+		console.log('car top: '+this.top());
+
+
 
 		let myPath = self.path();
 		console.log(myPath);
