@@ -132,7 +132,7 @@
 			//let enterDirection = space.enterDirection;
 			if  (  self.rotated == true 
 				&& self.reachedSpace == true
-				&& carFrontPx() > eval(`getComputedStyle(space).${objectStyleCheck}.replace('px','')`)
+				&& carFrontPx()-4 > eval(`getComputedStyle(space).${objectStyleCheck}.replace('px','')`)
 				) {
 				//console.log('parking: '+carFrontPx());
 				console.log('parking goal: '+objectStyleCheck+': '+eval(`getComputedStyle(space).${objectStyleCheck}.replace('px','')`));
