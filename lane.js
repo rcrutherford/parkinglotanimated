@@ -12,6 +12,17 @@ let createLanes = function () {
 	lane1.style.left = space1.style.right;
 	lane1.style.bottom = 0;
 
+	var exit1 = document.createElement("div");
+	var t = document.createTextNode('E1');
+	exit1.appendChild(t);
+	lot.appendChild(exit1);
+	exit1.className = 'exit';
+	exit1.id = 'exit1';
+	exit1.style.height = spaceLargestDim+'px';
+	exit1.style.width = lane1.style.width;
+	exit1.style.left = lane1.style.left;
+	exit1.style.bottom = -1*spaceLargestDim+'px';
+
 	let space10 = document.getElementById("space10");
 	var lane2 = document.createElement("div");
 	var t = document.createTextNode('L2');
@@ -24,6 +35,17 @@ let createLanes = function () {
 	lane2.style.width = parseInt(space1.style.width)-leftIgnore+'px';
 	lane2.style.left = parseInt(space10.style.left)-spaceLargestDim+leftIgnore+'px';
 	lane2.style.bottom = 0;
+
+	var exit2 = document.createElement("div");
+	var t = document.createTextNode('E2');
+	exit2.appendChild(t);
+	lot.appendChild(exit2);
+	exit2.className = 'exit';
+	exit2.id = 'exit2';
+	exit2.style.height =spaceLargestDim+'px';
+	exit2.style.width = lane2.style.width;
+	exit2.style.left = lane2.style.left;
+	exit2.style.bottom = -1*spaceLargestDim+'px';
 
 	let space19 = document.getElementById("space19");
 	var lane3 = document.createElement("div");

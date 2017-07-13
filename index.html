@@ -24,6 +24,7 @@
 		var car={};
 
 
+
 		window.onload = function () {
 			lot = document.getElementById("lot");
 			windowWidth = parseInt(getComputedStyle(lot).width.replace('px',''));
@@ -53,7 +54,7 @@
 			intersectionC = document.getElementById('intersectionC');
 			intersectionD = document.getElementById('intersectionD');
 
-			car = new Car(carImg, space13, intersectionA, intersectionB, intersectionC, intersectionD);
+			car = new Car(carImg, space31, intersectionA, intersectionB, intersectionC, intersectionD);
 						
 			eventProxy.addEventListener('tick',car.observeTime);
 
@@ -95,6 +96,13 @@
 	    }
 	    .lane {
 	    	/*border: solid blue 1px;*/
+	    	position: absolute;
+	    	display: flex;
+		    align-items: center;
+		    justify-content: center;
+	    }
+	    .exit {
+	    	border: solid yellow 1px;
 	    	position: absolute;
 	    	display: flex;
 		    align-items: center;

@@ -5,19 +5,35 @@
 	}
 
 	let Car = function(carImage, space, iA, iB, iC, iD) {
-		let speed = getRandom(5,10);
+		let speed = getRandom(10,20);
 		//let speed = 5;
-		this.rotated = false;
-		this.reachedSpace = false;
+		this.exitLane = function(){
+			if (getComputedStyle(lane1).right.replace('px','') - getComputedStyle(space).right.replace('px','') > getComputedStyle(lane2).left.replace('px','') - getComputedStyle(space).left.replace('px','')) {
+				console.log('exitLane: lane2');
+				return exitLane='lane2';
+			}
+			else {
+				console.log('exitLane: lane1');
+				return exitLane='lane1';
+			}
+			
+		}
 		this.finishedStep = false;
 		this.heading='right';
 		this.currentLane = '';
+		this.parked = false;
 		
 		let self = this;
+		let rotated = false;
+		let reachedSpace = false;
 		let objectStyleCheck = 'top';
 		let myDirection='';
 		let myHeadForPx = 0;
-		let checkPath=true;		
+		let getNextPath=true;		
+		let moveAlongPath = false;
+		let backup = false;
+		let startBackup = false;
+		let moveAlongExitPath = false;
 
 		this.observeTime = function(e) {
 			// console.log('observeTime');
@@ -45,9 +61,9 @@
 			}
 
 			console.log('carFrontPx(): ' + carFrontPx());
-			//follow path to space		
-			if (myPath.length > 0 && checkPath==true) {
-				console.log('myPath.length: '+myPath.length);
+			//get path to space		
+			if (myPath.length > 0 && getNextPath==true) {
+				//console.log('myPath.length: '+myPath.length);
 				myDirection = myPath[0];
 				if (myDirection == 'up|down' ) {
 					//console.log('up|down cartop:'+carTopPx() +' space.top:'+ getComputedStyle(space).top.replace('px',''));
@@ -63,94 +79,139 @@
 				if (self.heading !== myDirection) { 
 					self.rotateCar(myDirection);
 				}
+
 				let myHeadFor = myPath[1];
-			 	
 			 	let foostr = `getComputedStyle(${myHeadFor}).${objectStyleCheck}.replace('px','')`;
-				
 				myHeadForPx = eval(foostr);
-				
 				if (myHeadFor=='space' ) {
 					myHeadForPx = parseInt(myHeadForPx)-(spaceSmallestDim/4);	
 				}
-				// else if (objectStyleCheck =='right' || objectStyleCheck =='left') {
-				// 	myHeadForPx = parseInt(myHeadForPx)+(this.width/4);	
-				// }
 				else {
 					myHeadForPx = parseInt(myHeadForPx)+speed;	
 				}
-				// myHeadForPx = parseInt(myHeadForPx)+speed;
 
 				console.log('myHeadFor: '+myHeadFor+' '+objectStyleCheck+' myHeadForPx: '+myHeadForPx);
-				checkPath = false;
+				getNextPath = false;
+				moveAlongPath= true;
 			}	
-
+			// move along path
 			if 	(  myPath.length > 0
 				&& carFrontPx() > myHeadForPx
-				&& checkPath==false
+				&& moveAlongPath == true
 				) {
-				
-				switch (self.heading) {
-					case 'up':
-						self.moveCarUp(speed);
-						break;
-					case 'down':
-						self.moveCarDown(speed);
-						break;
-					case 'left':
-						self.moveCarLeft(speed);
-						break;
-					case 'right':
-						self.moveCarRight(speed);
-						break;
-				}
-				//console.log('moved car '+self.heading+' to '+carFrontPx());
-
+				self.moveCar(self.heading,speed);
+				console.log('moved parking car '+self.heading+' to '+carFrontPx());
 			}
+			// get next leg of path
 			else { 
 				if (myPath.length > 0
-					&& checkPath==false) {
+					&& getNextPath==false) {
 					//console.log('car '+carFrontPx()+' reached '+myHeadFor+' @'+myHeadForPx);
 					if (myPath.length > 0) {
 						myPath.shift();
 						myPath.shift();
 						console.log(myPath);
-						checkPath = true;
+						getNextPath = true;
 					}
 					if (myPath.length == 0) {
-						self.reachedSpace=true;
+						reachedSpace=true;
+						moveAlongPath = false;
 					}
 				}
 			}
 			
-			if (self.rotated == false && self.reachedSpace == true) {
+			//rotate towards space opening
+			if (rotated == false && reachedSpace == true) {
 				//console.log('rotate into space: '+space.enterDirection);
-				self.rotateCar(space.enterDirection)
-				self.rotated=true;
+				self.rotateCar(space.enterDirection);
+				rotated=true;
 			}
 
 			// park it
-			//let enterDirection = space.enterDirection;
-			if  (  self.rotated == true 
-				&& self.reachedSpace == true
-				&& carFrontPx()-4 > eval(`getComputedStyle(space).${objectStyleCheck}.replace('px','')`)
+			if  (  rotated == true 
+				&& reachedSpace == true
+				&& self.parked == false
+				&& carFrontPx()-leftIgnore > eval(`getComputedStyle(space).${objectStyleCheck}.replace('px','')`)
 				) {
 				//console.log('parking: '+carFrontPx());
 				console.log('parking goal: '+objectStyleCheck+': '+eval(`getComputedStyle(space).${objectStyleCheck}.replace('px','')`));
-				switch (self.heading) {
-					case 'up':
-						self.moveCarUp(2);
-						break;
-					case 'down':
-						self.moveCarDown(2);
+				self.moveCar(self.heading,2);
+			}
+			if  (  rotated == true 
+				&& reachedSpace == true
+				&& self.parked == false
+				&& carFrontPx()-leftIgnore <= eval(`getComputedStyle(space).${objectStyleCheck}.replace('px','')`)
+				) {
+				console.log('parked - starting timer');
+				self.parked = true;
+				let stayParked = setTimeout(function(){startBackup=true;}, 1000);
+				//set backup goal
+				switch (space.enterDirection) {
+					case 'left':
+						backupGoal = parseInt(getComputedStyle(space).left.replace('px','')) + parseInt(space.style.width.replace('px',''));
 						break;
 					case 'right':
-						self.moveCarRight(2);
+						backupGoal = parseInt(getComputedStyle(space).right.replace('px','')) + parseInt(space.style.width.replace('px',''));
 						break;
-					case 'left':
-						self.moveCarLeft(2);
+					case 'up':
+						backupGoal = parseInt(getComputedStyle(space).top.replace('px','')) + parseInt(space.style.height.replace('px',''));
+						break;
+					case 'down':
+						backupGoal = parseInt(getComputedStyle(space).bottom.replace('px','')) + parseInt(space.style.height.replace('px',''));
 						break;
 				}
 			}
+
+			//backup
+			if  (  startBackup == true 
+				&& carFrontPx() <= backupGoal
+				&& self.parked == true
+				) {
+				console.log('carFrontPx(): '+(carFrontPx())+ ' backupGoal: '+backupGoal)
+				if (myExitPath[0]=='up|down') {
+					if (self.heading =='up') {
+						myExitPath[0] = 'down';
+					}
+					else {
+						myExitPath[0] = 'up';
+					}
+				}
+				self.moveCar(myExitPath[0],2);
+			} 
+
+			if  (  startBackup == true 
+				&& carFrontPx() > backupGoal
+				&& self.parked == true
+				&& moveAlongExitPath == false
+				) {
+				moveAlongExitPath = true;
+				if (myExitPath.length > 0) {
+					myExitPath.shift();
+					myExitPath.shift();
+				}
+				self.rotateCar(myExitPath[0]);
+			}
+				//head toward nearest lane exit intersection or lane exit if in lane
+			
+			if (moveAlongExitPath == true && myExitPath.length > 0) {
+				let foostr = `getComputedStyle(${myExitPath[1]}).${objectStyleCheck}.replace('px','')`;
+				let myHeadForExit = eval(foostr);
+				if (carFrontPx() > myHeadForExit) {
+					console.log('carFrontPx: '+carFrontPx()+ ' exiting to '+myExitPath[1]+' myHeadForExit: '+myHeadForExit)
+					self.moveCar(self.heading,speed);
+				}
+				if (carFrontPx() <= myHeadForExit && myExitPath.length > 0) {
+					if (myExitPath.length > 0) {
+						myExitPath.shift();
+						myExitPath.shift();
+						self.rotateCar(myExitPath[0]);
+					}
+					console.log('carFrontPx: '+carFrontPx()+ ' exiting to '+myExitPath[1]+' myHeadForExit: '+myHeadForExit)
+					self.moveCar(self.heading,speed);
+				}
+			}
+			// }
+
 		} //end observertime
 			
 		this.rotateCar = function (direction) {
@@ -177,22 +238,39 @@
 		}
 
 		//move car up down left right
-		this.moveCarDown = function(mySpeed) {
-			carImage.style.top = (self.top() + mySpeed ) + 'px';
+		this.moveCar = function(direction, mySpeed) {
+			switch (direction) {
+				case 'down':
+					carImage.style.top = (self.top() + mySpeed ) + 'px';
+					break;
+				case 'up':
+					carImage.style.top = (self.top() - mySpeed ) + 'px';
+					break;
+				case 'right':
+					carImage.style.left = (self.left() + mySpeed ) + 'px';
+					break;
+				case 'left':
+					carImage.style.left = (self.left() - mySpeed ) + 'px';
+					break;
+			}
 		}
 
-		this.moveCarUp = function(mySpeed) {
-			carImage.style.top = (self.top() - mySpeed) + 'px';
-		}
+		// this.moveCarDown = function(mySpeed) {
+		// 	carImage.style.top = (self.top() + mySpeed ) + 'px';
+		// }
 
-		this.moveCarRight = function(mySpeed) {
-			//console.log('carImage.style.right: '+carImage.style.right);
-			carImage.style.left = (self.left() + mySpeed) + 'px';
-		}
+		// this.moveCarUp = function(mySpeed) {
+		// 	carImage.style.top = (self.top() - mySpeed) + 'px';
+		// }
 
-		this.moveCarLeft = function(mySpeed) {
-			carImage.style.left = (self.left() - mySpeed) + 'px';
-		}
+		// this.moveCarRight = function(mySpeed) {
+		// 	//console.log('carImage.style.right: '+carImage.style.right);
+		// 	carImage.style.left = (self.left() + mySpeed) + 'px';
+		// }
+
+		// this.moveCarLeft = function(mySpeed) {
+		// 	carImage.style.left = (self.left() - mySpeed) + 'px';
+		// }
 
 		//return the current computed top bottom left right of car as integer
 		this.top = function() {
@@ -256,7 +334,46 @@
 					break;
 				}
 			}
-		} //end path
+		} // end this.path
+
+		this.exitPath = function () {
+			let exitPaths = [
+				{'space':'lane1',
+				 'exitLane':'lane1',
+				 'path':'right,lane1,down,exit1'
+				},
+				{'space':'lane2',
+				 'exitLane':'lane2',
+				 'path':'left,lane2,down,exit2'
+				},
+				{'space':'lane3',
+				 'exitLane':'lane1',
+				 'path':'up,lane3,left,iA,down,exit1'
+				},
+				{'space':'lane3',
+				 'exitLane':'lane2',
+				 'path':'up,lane3,right,iB,down,exit2'
+				},
+				{'space':'lane4',
+				 'exitLane':'lane1',
+				 'path':'up|down,lane4,left,iC,down,exit1'
+				},
+				{'space':'lane4',
+				 'exitLane':'lane2',
+				 'path':'up,lane4,right,iD,down,exit2'
+				}
+			];
+
+			for (i in exitPaths) {
+				// console.log ('i: '+paths[i].start);
+				if (exitPaths[i].space == space.lane && exitPaths[i].exitLane == self.exitLane()) {
+					//console.log ('path: '+paths[i].path);
+					return exitPaths[i].path.split(',');
+					break;
+				}
+			}
+
+		} //end this.exitPath
 
 		carImage.style.height = spaceSmallestDim-10+'px';
 		carImage.style.width = spaceLargestDim-10+'px';
@@ -282,7 +399,10 @@
 
 
 		let myPath = self.path();
+		let myExitPath = self.exitPath();
+		
 		console.log(myPath);
+		console.log(myExitPath);
 
 		
 
