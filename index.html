@@ -21,12 +21,15 @@
 		var onePctWidth = 0;
 		var onePctHeight = 0;
 		var carImg = {};
+		var cars=[];
 		var car={};
+		
 
 
 
 		window.onload = function () {
 			lot = document.getElementById("lot");
+			body= document.getElementById("body");
 			windowWidth = parseInt(getComputedStyle(lot).width.replace('px',''));
 			lotHeight = parseInt(getComputedStyle(lot).height.replace('px',''));
 			lotWidth = lotHeight * 1.333333333;
@@ -48,43 +51,66 @@
 
 			var eventProxy = document.getElementById("eventProxy");
 			
-			carImg = document.getElementById('car1');
+			
 			intersectionA = document.getElementById('intersectionA');
 			intersectionB = document.getElementById('intersectionB');
 			intersectionC = document.getElementById('intersectionC');
 			intersectionD = document.getElementById('intersectionD');
 
-			for (i=1;i<=1;i++){
-				let emptySpace = {};
-				forj:
-				for (j=1;j<=33;j++) {
-					let tempSpace = document.getElementById('space'+j);
-					if (tempSpace.occupied==false) {
-						emptySpace = tempSpace;
-						console.log('emptySpace:'+emptySpace.id);
-						break forj;
-					}
-				}
-				myTimeOut = setTimeout(function(){
-
-					car[i] =new Car(carImg, emptySpace, intersectionA, intersectionB, intersectionC, intersectionD);
-					eventProxy.addEventListener('tick',car[i].observeTime);
-				},1000);
+			// for (i=0;i<=1;i++){
+			// 	cars.push({});
+			// 	let emptySpace = {};
+			// 	cars[i] = document.createElement("img");
+			// 	let t = document.createTextNode(i);
+			// 	cars[i].appendChild(t);
+			// 	body.appendChild(cars[i]);
+			// 	cars[i].className = 'car';
+			// 	cars[i].id = 'car'+i;
+			// 	cars[i].src="images/car-blue.png"
+			// 	carImg = document.getElementById(cars[i].id);
+			// 	forj:
+			// 	for (j=1;j<=33;j++) {
+			// 		let k = getRandom(1,33);
+			// 		let tempSpace = document.getElementById('space'+k);
+			// 		if (tempSpace.occupied==false) {
+			// 			emptySpace = tempSpace;
+			// 			console.log('emptySpace:'+emptySpace.id);
+			// 			break forj;
+			// 		}
+			// 	}
+			// 	myTimeOut = setTimeout(function(i){
+			// 		cars[i]=new Car(carImg, emptySpace, intersectionA, intersectionB, intersectionC, intersectionD);
+			// 		eventProxy.addEventListener('tick',cars[i].observeTime);
+			// 	},1000, i);
 					
-			}
+			// }
 
-			// let emptySpace = space24;
-			// car = new Car(carImg, emptySpace, intersectionA, intersectionB, intersectionC, intersectionD);
-			
-						
-			//eventProxy.addEventListener('tick',car.observeTime);
+			carImg = document.getElementById('carx');
+			let emptySpace = {};
+			forj:
+			for (j=1;j<=33;j++) {
+				let k = getRandom(1,33);
+				let tempSpace = document.getElementById('space'+k);
+				if (tempSpace.occupied==false) {
+					emptySpace = tempSpace;
+					console.log('emptySpace:'+emptySpace.id);
+					break forj;
+				}
+			}
+			//let emptySpace = space24;
+			car = new Car(carImg, emptySpace, intersectionA, intersectionB, intersectionC, intersectionD);
+			eventProxy.addEventListener('tick',car.observeTime);
 
 			var intervalId = setInterval(fireTick, 33.3333);
-			var myTimeOut = setTimeout(function() {clearInterval(intervalId);},20000);
+			var myTimeOut = setTimeout(function() {clearInterval(intervalId);},15000);
 
 			function fireTick() {
 				let event = new Event('tick');
 				eventProxy.dispatchEvent(event);
+			}
+			function getRandom(min, max) {
+			    var result = Math.random() * (max - min) + min;
+			    return Math.round(result);
 			}
 
 		};
@@ -145,11 +171,11 @@
 
 	</style>
 </head>
-<body>
+<body id='body'>
 	<div id="lot" class="bg">
 		
 	</div>
-		<img id="car1" class = "car" src="images/car-blue.png" />
+		<img id="carx" class = "car" src="images/car-blue.png" />
 	<br id="eventProxy">
 </body>
 </html>

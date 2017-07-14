@@ -1,8 +1,8 @@
 	
 	function getRandom(min, max) {
-	    var result = Math.random() * (max - min) + min;
-	    return Math.round(result);
-	}
+			    var result = Math.random() * (max - min) + min;
+			    return Math.round(result);
+			}
 
 	let Car = function(carImage, space, iA, iB, iC, iD) {
 		space.occupied = true;
@@ -145,7 +145,7 @@
 				) {
 				console.log('parked - starting timer');
 				self.parked = true;
-				let stayParked = setTimeout(function(){startBackup=true;}, 1000);
+				let stayParked = setTimeout(function(){startBackup=true;}, getRandom(1,6)*500);
 				//set backup goal
 				switch (space.enterDirection) {
 					case 'left':
@@ -193,8 +193,8 @@
 				}
 				self.rotateCar(myExitPath[0]);
 			}
-				//head toward nearest lane exit intersection or lane exit if in lane
 			
+			//head toward nearest lane exit intersection or lane exit if in lane
 			if (moveAlongExitPath == true && myExitPath.length > 0) {
 				let foostr = `getComputedStyle(${myExitPath[1]}).${objectStyleCheck}.replace('px','')`;
 				let myHeadForExit = eval(foostr);
