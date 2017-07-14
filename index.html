@@ -23,11 +23,12 @@
 		var carImgs = [];
 		var cars=[];
 		var car={};
-		var images = ['car-aqua.png','car-green.png','car-lime-green.png','car-purple.png'
+		var images = [
+		     'car-aqua.png','car-green.png','car-lime-green.png','car-purple.png'
 			,'car-blue.png','car-grey.png','car-orange.png','car-red.png','car-yellow.png'
 			,'car-dragon.png','car-hot-pink.png','car-pink.png','car-stripes.png','car-white.png'
 		];
-
+		var carQty = 5;
 
 
 		window.onload = function () {
@@ -60,7 +61,7 @@
 			intersectionD = document.getElementById('intersectionD');
 
 			// more than 1 car
-			for (var i=0;i<=2;i++){
+			for (var i=0;i<=carQty-1;i++){
 				cars.push({});
 				let emptySpace = {};
 				cars[i] = document.createElement("img");
@@ -81,14 +82,15 @@
 					let tempSpace = document.getElementById('space'+k);
 					if (tempSpace.occupied==false) {
 						emptySpace = tempSpace;
+						emptySpace.occupied=true;
 						console.log('emptySpace:'+emptySpace.id);
 						break forj;
 					}
 				}
 				myTimeOut = setTimeout(function(i){
-					cars[i]=new Car(carImgs[i], emptySpace, intersectionA, intersectionB, intersectionC, intersectionD);
+					cars[i]=new Car(carImgs[i], emptySpace, intersectionA, intersectionB, intersectionC, intersectionD, cars[i].id);
 					eventProxy.addEventListener('tick',cars[i].observeTime);
-				},1000, i);
+				},1000*i, i);
 			}
 			// end more than one car
 
@@ -112,7 +114,7 @@
 			// // end one car
 
 			var intervalId = setInterval(fireTick, 33.3333);
-			var myTimeOut = setTimeout(function() {clearInterval(intervalId);},15000);
+			var myTimeOut = setTimeout(function() {clearInterval(intervalId);},carQty*5000);
 
 			function fireTick() {
 				let event = new Event('tick');
