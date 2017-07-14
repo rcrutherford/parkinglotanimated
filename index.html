@@ -60,7 +60,7 @@
 			intersectionD = document.getElementById('intersectionD');
 
 			// more than 1 car
-			for (i=0;i<=0;i++){
+			for (var i=0;i<=0;i++){
 				cars.push({});
 				let emptySpace = {};
 				cars[i] = document.createElement("img");
@@ -75,7 +75,7 @@
 				carImg = document.getElementById(cars[i].id);
 
 				forj:
-				for (j=1;j<=33;j++) {
+				for (var j=1;j<=33;j++) {
 					let k = getRandom(1,33);
 					let tempSpace = document.getElementById('space'+k);
 					if (tempSpace.occupied==false) {
