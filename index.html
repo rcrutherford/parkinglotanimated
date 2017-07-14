@@ -20,7 +20,7 @@
 		var spaceLargestDim = 0;
 		var onePctWidth = 0;
 		var onePctHeight = 0;
-		var carImg = {};
+		var carImgs = [];
 		var cars=[];
 		var car={};
 		var images = ['car-aqua.png','car-green.png','car-lime-green.png','car-purple.png'
@@ -60,7 +60,7 @@
 			intersectionD = document.getElementById('intersectionD');
 
 			// more than 1 car
-			for (var i=0;i<=0;i++){
+			for (var i=0;i<=2;i++){
 				cars.push({});
 				let emptySpace = {};
 				cars[i] = document.createElement("img");
@@ -72,7 +72,8 @@
 				cars[i].style.visibility = 'normal';
 				let iRand = getRandom(0,images.length-1)
 				cars[i].src="images/"+images[iRand];
-				carImg = document.getElementById(cars[i].id);
+				carImgs.push({});
+				carImgs[i] = document.getElementById(cars[i].id);
 
 				forj:
 				for (var j=1;j<=33;j++) {
@@ -85,7 +86,7 @@
 					}
 				}
 				myTimeOut = setTimeout(function(i){
-					cars[i]=new Car(carImg, emptySpace, intersectionA, intersectionB, intersectionC, intersectionD);
+					cars[i]=new Car(carImgs[i], emptySpace, intersectionA, intersectionB, intersectionC, intersectionD);
 					eventProxy.addEventListener('tick',cars[i].observeTime);
 				},1000, i);
 			}
