@@ -5,7 +5,8 @@
 	}
 
 	let Car = function(carImage, space, iA, iB, iC, iD) {
-		let speed = getRandom(10,20);
+		space.occupied = true;
+		let speed = getRandom(6,14);
 		//let speed = 5;
 		this.exitLane = function(){
 			if (getComputedStyle(lane1).right.replace('px','') - getComputedStyle(space).right.replace('px','') > getComputedStyle(lane2).left.replace('px','') - getComputedStyle(space).left.replace('px','')) {
@@ -166,6 +167,7 @@
 			if  (  startBackup == true 
 				&& carFrontPx() <= backupGoal
 				&& self.parked == true
+				&& moveAlongExitPath == false
 				) {
 				console.log('carFrontPx(): '+(carFrontPx())+ ' backupGoal: '+backupGoal)
 				if (myExitPath[0]=='up|down') {
@@ -208,6 +210,10 @@
 					}
 					console.log('carFrontPx: '+carFrontPx()+ ' exiting to '+myExitPath[1]+' myHeadForExit: '+myHeadForExit)
 					self.moveCar(self.heading,speed);
+				}
+				if (!carFrontPx() && space.occupied==true) {
+					space.occupied=false;
+					carImage.style.display = 'none';
 				}
 			}
 			// }
@@ -254,23 +260,6 @@
 					break;
 			}
 		}
-
-		// this.moveCarDown = function(mySpeed) {
-		// 	carImage.style.top = (self.top() + mySpeed ) + 'px';
-		// }
-
-		// this.moveCarUp = function(mySpeed) {
-		// 	carImage.style.top = (self.top() - mySpeed) + 'px';
-		// }
-
-		// this.moveCarRight = function(mySpeed) {
-		// 	//console.log('carImage.style.right: '+carImage.style.right);
-		// 	carImage.style.left = (self.left() + mySpeed) + 'px';
-		// }
-
-		// this.moveCarLeft = function(mySpeed) {
-		// 	carImage.style.left = (self.left() - mySpeed) + 'px';
-		// }
 
 		//return the current computed top bottom left right of car as integer
 		this.top = function() {

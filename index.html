@@ -54,12 +54,33 @@
 			intersectionC = document.getElementById('intersectionC');
 			intersectionD = document.getElementById('intersectionD');
 
-			car = new Car(carImg, space31, intersectionA, intersectionB, intersectionC, intersectionD);
+			for (i=1;i<=1;i++){
+				let emptySpace = {};
+				forj:
+				for (j=1;j<=33;j++) {
+					let tempSpace = document.getElementById('space'+j);
+					if (tempSpace.occupied==false) {
+						emptySpace = tempSpace;
+						console.log('emptySpace:'+emptySpace.id);
+						break forj;
+					}
+				}
+				myTimeOut = setTimeout(function(){
+
+					car[i] =new Car(carImg, emptySpace, intersectionA, intersectionB, intersectionC, intersectionD);
+					eventProxy.addEventListener('tick',car[i].observeTime);
+				},1000);
+					
+			}
+
+			// let emptySpace = space24;
+			// car = new Car(carImg, emptySpace, intersectionA, intersectionB, intersectionC, intersectionD);
+			
 						
-			eventProxy.addEventListener('tick',car.observeTime);
+			//eventProxy.addEventListener('tick',car.observeTime);
 
 			var intervalId = setInterval(fireTick, 33.3333);
-			var myTimeOut = setTimeout(function() {clearInterval(intervalId);},10000);
+			var myTimeOut = setTimeout(function() {clearInterval(intervalId);},20000);
 
 			function fireTick() {
 				let event = new Event('tick');
