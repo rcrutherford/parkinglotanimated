@@ -349,7 +349,7 @@
 				},
 				{'space':'lane4',
 				 'exitLane':'lane2',
-				 'path':'up,lane4,right,iD,down,exit2'
+				 'path':'up|down,lane4,right,iD,down,exit2'
 				}
 			];
 
