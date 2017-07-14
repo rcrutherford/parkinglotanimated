@@ -23,7 +23,10 @@
 		var carImg = {};
 		var cars=[];
 		var car={};
-		
+		var images = ['car-aqua.png','car-green.png','car-lime-green.png','car-purple.png'
+			,'car-blue.png','car-grey.png','car-orange.png','car-red.png','car-yellow.png'
+			,'car-dragon.png','car-hot-pink.png','car-pink.png','car-stripes.png','car-white.png'
+		];
 
 
 
@@ -51,55 +54,61 @@
 
 			var eventProxy = document.getElementById("eventProxy");
 			
-			
 			intersectionA = document.getElementById('intersectionA');
 			intersectionB = document.getElementById('intersectionB');
 			intersectionC = document.getElementById('intersectionC');
 			intersectionD = document.getElementById('intersectionD');
 
-			// for (i=0;i<=1;i++){
-			// 	cars.push({});
-			// 	let emptySpace = {};
-			// 	cars[i] = document.createElement("img");
-			// 	let t = document.createTextNode(i);
-			// 	cars[i].appendChild(t);
-			// 	body.appendChild(cars[i]);
-			// 	cars[i].className = 'car';
-			// 	cars[i].id = 'car'+i;
-			// 	cars[i].src="images/car-blue.png"
-			// 	carImg = document.getElementById(cars[i].id);
-			// 	forj:
-			// 	for (j=1;j<=33;j++) {
-			// 		let k = getRandom(1,33);
-			// 		let tempSpace = document.getElementById('space'+k);
-			// 		if (tempSpace.occupied==false) {
-			// 			emptySpace = tempSpace;
-			// 			console.log('emptySpace:'+emptySpace.id);
-			// 			break forj;
-			// 		}
-			// 	}
-			// 	myTimeOut = setTimeout(function(i){
-			// 		cars[i]=new Car(carImg, emptySpace, intersectionA, intersectionB, intersectionC, intersectionD);
-			// 		eventProxy.addEventListener('tick',cars[i].observeTime);
-			// 	},1000, i);
-					
-			// }
+			// more than 1 car
+			for (i=0;i<=1;i++){
+				cars.push({});
+				let emptySpace = {};
+				cars[i] = document.createElement("img");
+				let t = document.createTextNode(i);
+				cars[i].appendChild(t);
+				body.appendChild(cars[i]);
+				cars[i].className = 'car';
+				cars[i].id = 'car'+i;
+				cars[i].style.visibility = 'normal';
+				let iRand = getRandom(0,images.length-1)
+				cars[i].src="images/"+images[iRand];
+				carImg = document.getElementById(cars[i].id);
 
-			carImg = document.getElementById('carx');
-			let emptySpace = {};
-			forj:
-			for (j=1;j<=33;j++) {
-				let k = getRandom(1,33);
-				let tempSpace = document.getElementById('space'+k);
-				if (tempSpace.occupied==false) {
-					emptySpace = tempSpace;
-					console.log('emptySpace:'+emptySpace.id);
-					break forj;
+				forj:
+				for (j=1;j<=33;j++) {
+					let k = getRandom(1,33);
+					let tempSpace = document.getElementById('space'+k);
+					if (tempSpace.occupied==false) {
+						emptySpace = tempSpace;
+						console.log('emptySpace:'+emptySpace.id);
+						break forj;
+					}
 				}
+				myTimeOut = setTimeout(function(i){
+					cars[i]=new Car(carImg, emptySpace, intersectionA, intersectionB, intersectionC, intersectionD);
+					eventProxy.addEventListener('tick',cars[i].observeTime);
+				},1000, i);
 			}
-			//let emptySpace = space24;
-			car = new Car(carImg, emptySpace, intersectionA, intersectionB, intersectionC, intersectionD);
-			eventProxy.addEventListener('tick',car.observeTime);
+			// end more than one car
+
+			// // one car
+			// carImg = document.getElementById('carx');
+			// carImg.style.visibility = 'normal';
+			// let emptySpace = {};
+			// forj:
+			// for (j=1;j<=33;j++) {
+			// 	let k = getRandom(1,33);
+			// 	let tempSpace = document.getElementById('space'+k);
+			// 	if (tempSpace.occupied==false) {
+			// 		emptySpace = tempSpace;
+			// 		console.log('emptySpace:'+emptySpace.id);
+			// 		break forj;
+			// 	}
+			// }
+			// //let emptySpace = space24;
+			// car = new Car(carImg, emptySpace, intersectionA, intersectionB, intersectionC, intersectionD);
+			// eventProxy.addEventListener('tick',car.observeTime);
+			// // end one car
 
 			var intervalId = setInterval(fireTick, 33.3333);
 			var myTimeOut = setTimeout(function() {clearInterval(intervalId);},15000);
@@ -175,7 +184,7 @@
 	<div id="lot" class="bg">
 		
 	</div>
-		<img id="carx" class = "car" src="images/car-blue.png" />
+		<img id="carx" class = "car" src="images/car-blue.png" style="visibility: hidden" />
 	<br id="eventProxy">
 </body>
 </html>
