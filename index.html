@@ -28,7 +28,7 @@
 			,'car-blue.png','car-grey.png','car-orange.png','car-red.png','car-yellow.png'
 			,'car-dragon.png','car-hot-pink.png','car-pink.png','car-stripes.png','car-white.png'
 		];
-		var carQty = 5;
+		var carQty = 20;
 
 
 		window.onload = function () {
@@ -38,7 +38,7 @@
 			lotHeight = parseInt(getComputedStyle(lot).height.replace('px',''));
 			lotWidth = lotHeight * 1.333333333;
 			if (windowWidth<lotWidth){
-				alert("Please make window width wider than parkinglot!")
+				alert("Please make/keep window width wider than parkinglot!")
 			}
 			lotLeft = (windowWidth - lotWidth )/2;
 			bottomIgnore = lotHeight*.02117;
@@ -61,7 +61,7 @@
 			intersectionD = document.getElementById('intersectionD');
 
 			// more than 1 car
-			for (var i=0;i<=carQty-1;i++){
+			for (var i=1;i<=carQty;i++){
 				cars.push({});
 				let emptySpace = {};
 				cars[i] = document.createElement("img");
@@ -70,11 +70,12 @@
 				body.appendChild(cars[i]);
 				cars[i].className = 'car';
 				cars[i].id = 'car'+i;
-				cars[i].style.visibility = 'normal';
+				// cars[i].style.visibility = 'hidden';
 				let iRand = getRandom(0,images.length-1)
 				cars[i].src="images/"+images[iRand];
 				carImgs.push({});
 				carImgs[i] = document.getElementById(cars[i].id);
+				carImgs[i].style.visibility = 'hidden';
 
 				forj:
 				for (var j=1;j<=33;j++) {
@@ -88,7 +89,7 @@
 					}
 				}
 				myTimeOut = setTimeout(function(i){
-					cars[i]=new Car(carImgs[i], emptySpace, intersectionA, intersectionB, intersectionC, intersectionD, cars[i].id);
+					cars[i]=new Car(carImgs[i], emptySpace, intersectionA, intersectionB, intersectionC, intersectionD, cars[i].id, lane1, lane2, lane3, lane4);
 					eventProxy.addEventListener('tick',cars[i].observeTime);
 				},1000*i, i);
 			}
@@ -114,7 +115,7 @@
 			// // end one car
 
 			var intervalId = setInterval(fireTick, 33.3333);
-			var myTimeOut = setTimeout(function() {clearInterval(intervalId);},carQty*5000);
+			var myTimeOut = setTimeout(function() {clearInterval(intervalId);},carQty*10000);
 
 			function fireTick() {
 				let event = new Event('tick');

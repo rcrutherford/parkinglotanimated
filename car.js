@@ -4,8 +4,10 @@
 			    return Math.round(result);
 			}
 
-	let Car = function(carImage, space, iA, iB, iC, iD, carId) {
 
+	
+	let Car = function(carImage, space, iA, iB, iC, iD, carId, lane1, lane2, lane3, lane4) {
+		carImage.style.visibility = 'visible';
 		let speed = getRandom(6,14);
 		//let speed = 5;
 		this.exitLane = function(){
@@ -19,10 +21,14 @@
 			}
 			
 		}
+		let objExitLane = document.getElementById(this.exitLane());
+		let objSpaceLane = document.getElementById(space.lane);
+		console.dir(objExitLane);
 		this.finishedStep = false;
 		this.heading='right';
 		this.currentLane = '';
 		this.parked = false;
+
 		
 		let self = this;
 		
@@ -37,6 +43,27 @@
 		let startBackup = false;
 		let moveAlongExitPath = false;
 		let backupGoal = 0;
+
+		let Lane1TopMin =getComputedStyle(lane1).top.replace('px','');
+		let Lane1TopMax =eval(parseInt(getComputedStyle(lane1).top.replace('px',''))+parseInt(getComputedStyle(lane1).height.replace('px','')));
+		let Lane1LeftMin =getComputedStyle(lane1).left.replace('px','');
+		let Lane1LeftMax =eval(parseInt(getComputedStyle(lane1).left.replace('px',''))+parseInt(getComputedStyle(lane1).width.replace('px','')));
+		
+		let Lane2TopMin =getComputedStyle(lane2).top.replace('px','');
+		let Lane2TopMax =eval(parseInt(getComputedStyle(lane2).top.replace('px',''))+parseInt(getComputedStyle(lane2).height.replace('px','')));
+		let Lane2LeftMin =getComputedStyle(lane2).left.replace('px','');
+		let Lane2LeftMax =eval(parseInt(getComputedStyle(lane2).left.replace('px',''))+parseInt(getComputedStyle(lane2).width.replace('px','')));
+
+		let Lane3TopMin =getComputedStyle(lane3).top.replace('px','');
+		let Lane3TopMax =eval(parseInt(getComputedStyle(lane3).top.replace('px',''))+parseInt(getComputedStyle(lane3).height.replace('px','')));
+		let Lane3LeftMin =getComputedStyle(lane3).left.replace('px','');
+		let Lane3LeftMax =eval(parseInt(getComputedStyle(lane3).left.replace('px',''))+parseInt(getComputedStyle(lane3).width.replace('px','')));
+
+		let Lane4TopMin =getComputedStyle(lane4).top.replace('px','');
+		let Lane4TopMax =eval(parseInt(getComputedStyle(lane4).top.replace('px',''))+parseInt(getComputedStyle(lane4).height.replace('px','')));
+		let Lane4LeftMin =getComputedStyle(lane4).left.replace('px','');
+		let Lane4LeftMax =eval(parseInt(getComputedStyle(lane4).left.replace('px',''))+parseInt(getComputedStyle(lane4).width.replace('px','')));
+
 
 		this.observeTime = function(e) {
 			
@@ -59,6 +86,75 @@
 						return carLeftPx();	
 						break;
 				} 
+			}
+			let carCenterTop = carTopPx()+(getComputedStyle(carImage).height.replace('px','')/2);
+			let carCenterLeft = carLeftPx()+(getComputedStyle(carImage).height.replace('px','')/2);
+
+			// console.log('carCenterTop: '+carCenterTop+' carCenterLeft: '+carCenterLeft);		
+
+			if (   carCenterLeft > Lane1LeftMin
+				&& carCenterLeft < Lane1LeftMax
+				&& carCenterTop > Lane1TopMin
+				&& carCenterTop < Lane1TopMax
+				) {
+				// console.log('lane1: '+carId);
+				self.currentLane='lane1';
+				if (lane1.occupied=='') {
+					lane1.occupied=carId;
+					console.log('lane1: '+carId);
+				}
+			}
+			else if (lane1.occupied==carId) {
+				lane1.occupied='';
+				console.log('lane1: clear');
+			}
+
+			if (   carCenterLeft > Lane2LeftMin
+				&& carCenterLeft < Lane2LeftMax
+				&& carCenterTop > Lane2TopMin
+				&& carCenterTop < Lane2TopMax
+				){
+				self.currentLane='lane2';
+				if (lane2.occupied=='') {
+					lane2.occupied=carId;
+					console.log('lane2: '+carId);
+				}
+			}
+			else if (lane2.occupied==carId) {
+				lane2.occupied='';
+				console.log('lane2: clear');
+			}
+
+			if (   carCenterLeft > Lane3LeftMin
+				&& carCenterLeft < Lane3LeftMax
+				&& carCenterTop > Lane3TopMin
+				&& carCenterTop < Lane3TopMax
+				){
+				self.currentLane='lane3';
+				if (lane3.occupied=='') {
+					lane3.occupied=carId;
+					console.log('lane3: '+carId);
+				}
+			}
+			else if (lane3.occupied==carId) {
+				lane3.occupied='';
+				console.log('lane3: clear');
+			}
+
+			if (   carCenterLeft > Lane4LeftMin
+				&& carCenterLeft < Lane4LeftMax
+				&& carCenterTop > Lane4TopMin
+				&& carCenterTop < Lane4TopMax
+				) {
+				self.currentLane='lane4';
+				if (lane4.occupied=='') {
+					lane4.occupied=carId;
+					console.log('lane4: '+carId);
+				}
+			}
+			else if (lane4.occupied==carId) {
+				lane4.occupied='';
+				console.log('lane4: clear');
 			}
 
 			//console.log(carId+' carFrontPx(): ' + carFrontPx());
@@ -97,14 +193,24 @@
 			if 	(  myPath.length > 0
 				&& carFrontPx() > myHeadForPx
 				&& moveAlongPath == true
+				  // && (objEntLane.occupied == '' || objEntLane.occupied==carId)
 				) {
-				self.moveCar(self.heading,speed);
+				let foostr=`${self.currentLane}.occupied`;
+				//console.log(carId + ' '+self.currentLane+' '+eval(foostr) );
+				if (carId == eval(foostr) || eval(foostr)==''){
+					self.moveCar(self.heading,speed);
+				}
+				else {
+					console.log(carId+' waiting on '+self.currentLane);
+				}
+
 				// console.log(carId+' moved parking car '+self.heading+' to '+carFrontPx());
 			}
 			// get next leg of path
 			else { 
-				if (myPath.length > 0
-					&& getNextPath==false) {
+				if (myPath.length > 0 
+					&& getNextPath==false
+					) {
 					if (myPath.length > 0) {
 						myPath.shift();
 						myPath.shift();
@@ -112,6 +218,7 @@
 						getNextPath = true;
 					}
 					if (myPath.length == 0) {
+
 						reachedSpace=true;
 						moveAlongPath = false;
 					}
@@ -163,6 +270,7 @@
 				&& carFrontPx() <= backupGoal
 				&& self.parked == true
 				&& moveAlongExitPath == false
+				// && (eval(space.lane+'.occupied') == '' || eval(space.lane+'.occupied') == carId)
 				) {
 				// console.log(carId+' carFrontPx(): '+(carFrontPx())+ ' backupGoal: '+backupGoal)
 				if (myExitPath[0]=='up|down') {
@@ -173,7 +281,11 @@
 						myExitPath[0] = 'up';
 					}
 				}
-				self.moveCar(myExitPath[0],2);
+				let foostr=`${self.currentLane}.occupied`;
+				if (carId == eval(foostr) || eval(foostr)==''){
+					self.moveCar(myExitPath[0],2);
+				}
+				
 			} 
 
 			if  (  startBackup == true 
@@ -195,7 +307,11 @@
 				let myHeadForExit = eval(foostr);
 				if (carFrontPx() > myHeadForExit) {
 					// console.log(carId+' carFrontPx: '+carFrontPx()+ ' exiting to '+myExitPath[1]+' myHeadForExit: '+myHeadForExit)
-					self.moveCar(self.heading,speed);
+					let foostr=`${self.currentLane}.occupied`;
+					if (carId == eval(foostr) || eval(foostr)==''){
+						self.moveCar(self.heading,speed);
+					}	
+					
 				}
 				if (carFrontPx() <= myHeadForExit && myExitPath.length > 0) {
 					if (myExitPath.length > 0) {
@@ -204,11 +320,16 @@
 						self.rotateCar(myExitPath[0]);
 					}
 					// console.log(carId+' carFrontPx: '+carFrontPx()+ ' exiting to '+myExitPath[1]+' myHeadForExit: '+myHeadForExit)
-					self.moveCar(self.heading,speed);
+					let foostr=`${self.currentLane}.occupied`;
+					if (carId == eval(foostr) || eval(foostr)==''){
+						self.moveCar(self.heading,speed);
+					}	
+					
 				}
-				if (!carFrontPx() && space.occupied==true) {
+				if (carCenterTop>getComputedStyle(exit1).top.replace('px','') 
+					&& space.occupied==true) {
 					space.occupied=false;
-					carImage.style.display = 'none';
+					carImage.style.visibility = 'hidden';
 				}
 			}
 			// }
@@ -365,6 +486,8 @@
 		let lane = getRandom(1,2);
 		let myLane = 'lane'+lane;
 		this.currentLane = myLane;
+		let objEntLane = document.getElementById(myLane);
+		
 
 		carImage.style.left = eval(myLane+'.style.left');
 

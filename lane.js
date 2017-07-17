@@ -6,7 +6,7 @@ let createLanes = function () {
 	lot.appendChild(lane1);
 	lane1.className = 'lane';
 	lane1.id = 'lane1';
-	lane1.occupied = false;
+	lane1.occupied = '';
 	lane1.style.height = lotHeight+'px';
 	lane1.style.width = space1.style.width;
 	lane1.style.left = space1.style.right;
@@ -30,7 +30,7 @@ let createLanes = function () {
 	lot.appendChild(lane2);
 	lane2.className = 'lane';
 	lane2.id = 'lane2';
-	lane2.occupied = false;
+	lane2.occupied = '';
 	lane2.style.height = lotHeight+'px';
 	lane2.style.width = parseInt(space1.style.width)-leftIgnore+'px';
 	lane2.style.left = parseInt(space10.style.left)-spaceLargestDim+leftIgnore+'px';
@@ -54,7 +54,7 @@ let createLanes = function () {
 	lot.appendChild(lane3);
 	lane3.className = 'lane';
 	lane3.id = 'lane3';
-	lane3.occupied = false;
+	lane3.occupied = '';
 	lane3.style.height = spaceLargestDim+'px';
 	lane3.style.width =(spaceSmallestDim*5)+'px';
 	lane3.style.left = parseInt(space19.style.left)+'px';
@@ -68,7 +68,7 @@ let createLanes = function () {
 	lot.appendChild(lane4);
 	lane4.className = 'lane';
 	lane4.id = 'lane4';
-	lane4.occupied = false;
+	lane4.occupied = '';
 	lane4.style.height = spaceLargestDim+'px';
 	lane4.style.width =(spaceSmallestDim*5)+'px';
 	lane4.style.left = parseInt(space24.style.left)+'px';
