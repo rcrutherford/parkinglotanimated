@@ -8,6 +8,12 @@
 	<script type="text/javascript" src="car.js"></script>
 	<script type="text/javascript">
 		
+		// code parameters
+		var carQty = 10;
+		var timeToRunPerCar=10000;
+		var delayBetweenCars=1000;
+
+
 		var windowWidth = 0;
 		var lotHeight = 0;
 		var lotWidth = 0;
@@ -28,7 +34,7 @@
 			,'car-blue.png','car-grey.png','car-orange.png','car-red.png','car-yellow.png'
 			,'car-dragon.png','car-hot-pink.png','car-pink.png','car-stripes.png','car-white.png'
 		];
-		var carQty = 20;
+		
 
 
 		window.onload = function () {
@@ -91,7 +97,7 @@
 				myTimeOut = setTimeout(function(i){
 					cars[i]=new Car(carImgs[i], emptySpace, intersectionA, intersectionB, intersectionC, intersectionD, cars[i].id, lane1, lane2, lane3, lane4);
 					eventProxy.addEventListener('tick',cars[i].observeTime);
-				},1000*i, i);
+				},delayBetweenCars*i, i);
 			}
 			// end more than one car
 
@@ -115,7 +121,7 @@
 			// // end one car
 
 			var intervalId = setInterval(fireTick, 33.3333);
-			var myTimeOut = setTimeout(function() {clearInterval(intervalId);},carQty*10000);
+			var myTimeOut = setTimeout(function() {clearInterval(intervalId);},carQty*timeToRunPerCar);
 
 			function fireTick() {
 				let event = new Event('tick');
